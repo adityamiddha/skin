@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server/server.js",
+    "start": "node working-server.js",
     "dev": "nodemon server/server.js",
     "setup": "node dev-setup.js",
     "build-client": "cd client && npm run build",
