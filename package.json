@@ -1,0 +1,36 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "setup": "node dev-setup.js",
+    "build-client": "cd client && npm run build",
+    "build-and-start": "npm run build-client && npm start",
+    "simple": "node server/simple-server.js",
+    "build-and-simple": "npm run build-client && npm run simple",
+    "test-server": "node server/test-server.js",
+    "robust": "node server/robust-server.js",
+    "build-and-robust": "npm run build-client && npm run robust",
+    "working": "node server/working-server.js",
+    "build-and-working": "npm run build-client && npm run working"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.1.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1",
+    "multer": "^2.0.2",
+    "streamifier": "^0.1.1"
+  }
+}
