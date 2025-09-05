@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const AppError = require('../utils/appError');
@@ -14,22 +15,33 @@ const ScanResultsRoutes = require('./routes/scanResultsRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
+// behind Render's proxy; needed for secure cookies and req.secure
+app.set('trust proxy', 1);
 
-// ✅ Proper CORS setup for all devices
+// ✅ Proper CORS setup for all devices and environments
 const allowedOrigins = [
-  "http://localhost:3000",               // local dev
-  "https://skin-sxau.onrender.com"       // your deployed frontend URL
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://skin-sxau.onrender.com"
 ];
 
 app.use(
   cors({
-    origin: allowedOrigins,
-    credentials: true, // allow cookies & authorization headers
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman) or if origin is in whitelist
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
   })
 );
 
 // ✅ Parse JSON
 app.use(express.json());
+// ✅ Parse cookies for auth middleware
+app.use(cookieParser());
 
 // Serve static files from React build
 const buildPath = path.join(__dirname, '../client/build');

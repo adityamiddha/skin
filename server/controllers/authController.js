@@ -4,15 +4,16 @@ const AppError = require('../../utils/appError');
 const catchAsync = require('../../utils/catchAsync');
 
 // Helper to create and send token with cookie
-const sendTokenResponse = (user, statusCode, res) => {
+const sendTokenResponse = (user, statusCode, req, res) => {
   const token = createToken(user._id);
 
   // Cookie options
+  const isProduction = process.env.NODE_ENV === 'production';
   const cookieOptions = {
     httpOnly: true,
-    secure: true,          // cookie only works on HTTPS
-    sameSite: 'None',      // allow cross-origin
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    secure: isProduction,                // secure cookies only in production/HTTPS
+    sameSite: isProduction ? 'None' : 'Lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000
   };
 
   res.cookie('jwt', token, cookieOptions);
@@ -35,7 +36,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, password } = req.body;
 
   const user = await User.create({ name, email, password });
-  sendTokenResponse(user, 201, res);
+  sendTokenResponse(user, 201, req, res);
 });
 
 // LOGIN
@@ -52,7 +53,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 401));
   }
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, 200, req, res);
 });
 
 // UPDATE PASSWORD
@@ -69,7 +70,7 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
   user.password = newPassword;
   await user.save();
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, 200, req, res);
 });
 
 // GET LOGGED-IN USER
