@@ -22,14 +22,22 @@ app.set('trust proxy', 1);
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://skin-sxau.onrender.com"
+  "https://skin-sxau.onrender.com",
+  "https://skin-sxau.onrender.com",
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like Postman) or if origin is in whitelist
-      if (!origin || allowedOrigins.includes(origin)) {
+      // allow requests with no origin (like Postman)
+      if (!origin) return callback(null, true);
+      // allow exact matches in whitelist
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      // allow any onrender.com subdomain (mobile browsers can rewrite to regional domains)
+      const onrenderRegex = /^https?:\/\/[a-z0-9-]+\.onrender\.com$/i;
+      if (onrenderRegex.test(origin)) {
         return callback(null, true);
       }
       return callback(new Error('Not allowed by CORS'));
