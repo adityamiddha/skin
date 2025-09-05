@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+// Determine API base URL dynamically based on environment
+// - Local dev: http://localhost:3000/api
+// - Production (Render): https://skin-sxau.onrender.com/api
+const isLocalhost = typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+const API_BASE_URL = isLocalhost
+  ? 'http://localhost:3000/api'
+  : 'https://skin-sxau.onrender.com/api';
 
 // Create axios instance with base configuration
 const api = axios.create({
@@ -8,9 +16,10 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token (still optional if you keep JWT in localStorage)
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -19,9 +28,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Response interceptor to handle auth errors
@@ -48,11 +55,10 @@ export const authAPI = {
 
 // Image API calls
 export const imageAPI = {
-  uploadImage: (formData) => api.post('/image/upload', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }),
+  uploadImage: (formData) =>
+    api.post('/image/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
   getMyImages: () => api.get('/image/my-images'),
 };
 
@@ -69,4 +75,3 @@ export const scanResultsAPI = {
 };
 
 export default api;
-
