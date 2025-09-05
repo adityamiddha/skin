@@ -3,14 +3,21 @@ const { createToken } = require('./../../utils/jwtUtils');
 const AppError = require('../../utils/appError');
 const catchAsync = require('../../utils/catchAsync');
 
-// SIGNUP
-exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password } = req.body;
-
-  const user = await User.create({ name, email, password });
+// Helper to create and send token with cookie
+const sendTokenResponse = (user, statusCode, res) => {
   const token = createToken(user._id);
 
-  res.status(200).json({
+  // Cookie options
+  const cookieOptions = {
+    httpOnly: true,
+    secure: true,          // cookie only works on HTTPS
+    sameSite: 'None',      // allow cross-origin
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  };
+
+  res.cookie('jwt', token, cookieOptions);
+
+  res.status(statusCode).json({
     status: 'success',
     token,
     data: {
@@ -21,6 +28,14 @@ exports.signup = catchAsync(async (req, res, next) => {
       }
     }
   });
+};
+
+// SIGNUP
+exports.signup = catchAsync(async (req, res, next) => {
+  const { name, email, password } = req.body;
+
+  const user = await User.create({ name, email, password });
+  sendTokenResponse(user, 201, res);
 });
 
 // LOGIN
@@ -37,19 +52,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 401));
   }
 
-  const token = createToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-    data: {
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email
-      }
-    }
-  });
+  sendTokenResponse(user, 200, res);
 });
 
 // UPDATE PASSWORD
@@ -66,13 +69,7 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
   user.password = newPassword;
   await user.save();
 
-  const token = createToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-    message: 'Password updated successfully'
-  });
+  sendTokenResponse(user, 200, res);
 });
 
 // GET LOGGED-IN USER
