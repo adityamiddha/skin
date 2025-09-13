@@ -111,7 +111,41 @@ npm run build-and-start
 
 ## 🌐 Deployment
 
-### 1. Production Environment Setup
+### Render Deployment
+
+This project is configured for easy deployment on [Render](https://render.com). Follow these steps:
+
+1. **Fork/Clone the Repository**
+   Make sure you have a clean copy without build files committed.
+
+2. **Create a New Web Service on Render**
+   - Go to [Render Dashboard](https://dashboard.render.com/)
+   - Click "New" and select "Web Service"
+   - Connect your GitHub repository
+   - Configure:
+     - **Name**: skincare-ai (or preferred name)
+     - **Runtime**: Node
+     - **Build Command**: `npm run render-build`
+     - **Start Command**: `npm start`
+
+3. **Configure Environment Variables**
+   Add the following in the Render dashboard:
+   ```
+   NODE_ENV=production
+   PORT=5000
+   MONGO_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret
+   CLOUDINARY_CLOUD_NAME=your_cloud_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   ```
+
+4. **Deploy**
+   Click "Create Web Service" and Render will automatically deploy your application.
+
+For more detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+### Manual Deployment
 
 Create a `.env.production` file based on the example:
 

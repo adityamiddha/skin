@@ -11,7 +11,8 @@
     "dev:proxy": "node server/dev-proxy-server.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:frontend\" \"npm run dev:proxy\"",
     "setup": "node dev-setup.js",
-    "build-client": "cd client && npm run build",
+    "build-client": "cd client && npm install && npm run build",
+    "build": "npm install && npm run build-client",
     "build-and-start": "npm run build-client && npm start",
     "simple": "node server/simple-server.js",
     "build-and-simple": "npm run build-client && npm run simple",
@@ -19,7 +20,8 @@
     "robust": "node server/robust-server.js",
     "build-and-robust": "npm run build-client && npm run robust",
     "working": "node server/working-server.js",
-    "build-and-working": "npm run build-client && npm run working"
+    "build-and-working": "npm run build-client && npm run working",
+    "render-build": "npm install && cd client && npm install && npm run build && cd .."
   },
   "keywords": [],
   "author": "",
