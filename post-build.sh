@@ -1,80 +1,68 @@
 #!/bin/bash
+# post-build.sh - Ensures build files are available in various locations on Render
 
-# This script helps ensure the build directory is available in all potential locations Render might look
+echo "� Running post-build script..."
 
-echo "🔍 Post-build directory setup..."
-
-# The build directory that should exist after the build process
+# Source build directory
 SOURCE_BUILD_DIR="client/build"
 
+# Check if source build directory exists
 if [ ! -d "$SOURCE_BUILD_DIR" ]; then
-  echo "❌ Source build directory not found at: $SOURCE_BUILD_DIR"
+  echo "❌ ERROR: Source build directory not found at: $SOURCE_BUILD_DIR"
+  echo "🔎 Current directory: $(pwd)"
+  echo "📋 Directory contents: $(ls -la)"
   exit 1
 fi
 
 echo "✅ Source build directory found at: $SOURCE_BUILD_DIR"
+echo "📋 Build directory contents: $(ls -la $SOURCE_BUILD_DIR | wc -l) files"
 
-# Define all the potential locations Render might look for the build directory
+# Ensure build files are copied to the root /build directory for simpler path handling
+echo "🔧 Creating root build directory..."
+mkdir -p build
+cp -r "$SOURCE_BUILD_DIR"/* build/
+echo "✅ Copied build files to ./build directory"
+
+# Define all potential locations Render might look for build files
 RENDER_BUILD_PATHS=(
   "/opt/render/project/src/client/build"
-  "/opt/render/project/client/build"
-  "/opt/render/project/src/server/client/build"
-  "/opt/build/client/build"
+  "/opt/render/project/src/build"
+  "/opt/render/project/client/build" 
+  "/opt/render/project/build"
 )
 
-# Create parent directories and copy build files
+# Try to create and copy to all potential Render paths
 for target_path in "${RENDER_BUILD_PATHS[@]}"; do
-  echo "🔍 Checking target path: $target_path"
+  echo "� Setting up build path: $target_path"
   
-  # Create parent directory if it doesn't exist
+  # Create parent directory
   parent_dir=$(dirname "$target_path")
-  if [ ! -d "$parent_dir" ]; then
-    echo "  Creating parent directory: $parent_dir"
-    mkdir -p "$parent_dir" || { echo "❌ Failed to create directory: $parent_dir"; continue; }
-  fi
+  mkdir -p "$parent_dir" || { echo "⚠️ Could not create directory: $parent_dir"; }
   
-  # Copy the build directory if it doesn't exist at target
+  # Copy files
   if [ ! -d "$target_path" ]; then
-    echo "  Copying build files to: $target_path"
-    cp -r "$SOURCE_BUILD_DIR" "$parent_dir/" || { echo "❌ Failed to copy to: $target_path"; continue; }
-    echo "  ✅ Build files copied successfully to: $target_path"
+    mkdir -p "$target_path"
+    cp -r "$SOURCE_BUILD_DIR"/* "$target_path/" || { echo "⚠️ Could not copy to: $target_path"; }
+    echo "✅ Copied build files to: $target_path"
+  fi
+done
+
+# Create fallback in /tmp which is always writable
+echo "� Creating fallback build in /tmp directory..."
+mkdir -p /tmp/client-build
+cp -r "$SOURCE_BUILD_DIR"/* /tmp/client-build/ || { echo "⚠️ Could not copy to /tmp/client-build"; }
+echo "✅ Created fallback build in /tmp/client-build"
+
+# Set environment variable
+export REACT_APP_BUILD_PATH="$(pwd)/build"
+echo "✅ Set REACT_APP_BUILD_PATH=$REACT_APP_BUILD_PATH"
+
+echo "✅ Post-build setup completed successfully"
+echo "� Deployment paths:"
+for path in "./build" "$SOURCE_BUILD_DIR" "${RENDER_BUILD_PATHS[@]}" "/tmp/client-build"; do
+  if [ -d "$path" ]; then
+    echo "  ✅ $path: $(ls -la $path | wc -l) files"
   else
-    echo "  ⚠️ Target already exists: $target_path"
+    echo "  ❌ $path: Not available"
   fi
 done
-
-# Try to create symbolic links as an alternative approach
-echo "🔍 Creating symbolic links..."
-for target_path in "${RENDER_BUILD_PATHS[@]}"; do
-  if [ ! -d "$target_path" ] && [ ! -L "$target_path" ]; then
-    echo "  Creating symbolic link to: $target_path"
-    ln -sf "$(pwd)/$SOURCE_BUILD_DIR" "$target_path" || echo "❌ Failed to create symlink to: $target_path"
-  fi
-done
-
-# Create temporary build location in /tmp which is always writable
-TMP_BUILD_DIR="/tmp/client-build"
-echo "🔍 Creating temporary build location: $TMP_BUILD_DIR"
-mkdir -p "$TMP_BUILD_DIR" || { echo "❌ Failed to create temp directory"; }
-cp -r "$SOURCE_BUILD_DIR"/* "$TMP_BUILD_DIR/" || { echo "❌ Failed to copy to temp directory"; }
-
-# Copy build files to a location that Render will definitely see
-echo "🔍 Copying build files to current directory for absolute paths"
-mkdir -p "./build" || { echo "❌ Failed to create ./build directory"; }
-cp -r "$SOURCE_BUILD_DIR"/* "./build/" || { echo "❌ Failed to copy to ./build"; }
-
-# Set environment variable in the current session (will need to be propagated to child processes)
-export REACT_APP_BUILD_PATH="$(pwd)/$SOURCE_BUILD_DIR"
-echo "✅ Set environment variable: REACT_APP_BUILD_PATH=$REACT_APP_BUILD_PATH"
-
-# List all the directories where we attempted to place build files
-echo "🔍 Build directories:"
-for target_path in "${RENDER_BUILD_PATHS[@]}"; do
-  if [ -d "$target_path" ] || [ -L "$target_path" ]; then
-    echo "  ✅ $target_path: $(ls -la "$target_path" | wc -l) files"
-  else
-    echo "  ❌ $target_path: Not available"
-  fi
-done
-
-echo "✅ Post-build setup completed"

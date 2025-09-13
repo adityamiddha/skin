@@ -3,7 +3,7 @@ services:
     name: skincare-ai
     runtime: node
     buildCommand: npm run render-build
-    startCommand: npm run start:render
+    startCommand: npm run start:deploy
     envVars:
       - key: NODE_ENV
         value: production
@@ -13,8 +13,6 @@ services:
         value: "true"
       - key: REACT_APP_BUILD_PATH
         value: "/opt/render/project/src/build"
-      - key: FALLBACK_ENABLED
-        value: "true"
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET
