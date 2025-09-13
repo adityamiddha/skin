@@ -15,7 +15,7 @@ Make sure you have a clean copy of the repository without build files committed.
    - **Name**: skincare-ai (or your preferred name)
    - **Runtime**: Node
    - **Build Command**: `npm run render-build`
-   - **Start Command**: `npm start`
+   - **Start Command**: `npm run start:render`
 
 ### Step 3: Configure Environment Variables
 Add the following environment variables in the Render dashboard:
@@ -64,4 +64,46 @@ Click "Create Web Service" and Render will automatically deploy your application
 - `npm run dev:all`: Start both frontend and backend
 - `npm run build`: Build the project for production
 - `npm run start`: Run the production server
+- `npm run start:render`: Run the specialized Render server
 - `npm run render-build`: Build script for Render deployment
+- `npm run health-check`: Check API health status
+- `npm run debug-paths`: Debug build path issues
+- `npm run debug-render`: Debug Render deployment issues
+
+## 🔧 Specialized Render Deployment
+
+This project includes several specialized components for robust deployment on Render:
+
+### 1. Specialized Render Server
+The `render-server.js` file provides:
+- Enhanced path detection for build files
+- Fallback HTML generation when build files aren't found
+- Comprehensive health check endpoints
+- Better error handling for deployment
+
+### 2. Fallback Mechanism
+If build files can't be found in the expected locations:
+- The server will generate a fallback HTML page
+- Basic functionality will still be available
+- API health will be displayed
+- Users will be informed of the deployment status
+
+### 3. Post-Build Script
+The `post-build.sh` script runs after the build to:
+- Copy build files to multiple potential locations
+- Create symbolic links for easier access
+- Set environment variables for path detection
+- Create a temporary fallback location in `/tmp`
+
+### 4. Health Check Routes
+The application includes several health check endpoints:
+- `/api/health`: Comprehensive health check for all components
+- `/health`: Quick status check
+- `/api/debug/paths`: Debug information about build paths
+
+### Debugging Render Deployment
+If you encounter issues with deployment:
+1. Check the Render logs for path detection information
+2. Access the health check endpoints
+3. Try using the fallback server: `npm run start:render`
+4. Verify that the post-build script executed correctly

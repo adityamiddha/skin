@@ -8,6 +8,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const AppError = require('../utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
+const { fallbackHTML } = require('./fallbackReact');
 
 const authRoutes = require('./routes/authRoutes');
 const imageRoutes = require('./routes/imageRoutes');
@@ -174,7 +175,25 @@ const serveIndexHtml = (res) => {
   
   // If we reach here, we couldn't find the file
   console.log('❌ Could not find index.html in any location');
-  return res.status(404).send('React app not built. Please run: npm run build-client');
+  console.log('📄 Serving fallback HTML page');
+  
+  // Create a fallback HTML file at the build path to serve as a last resort
+  try {
+    const fallbackDir = '/tmp/fallback-build';
+    if (!fs.existsSync(fallbackDir)) {
+      fs.mkdirSync(fallbackDir, { recursive: true });
+    }
+    
+    const fallbackPath = path.join(fallbackDir, 'index.html');
+    fs.writeFileSync(fallbackPath, fallbackHTML);
+    
+    console.log(`✅ Created fallback HTML at ${fallbackPath}`);
+    return res.sendFile(fallbackPath);
+  } catch (fallbackError) {
+    console.error('❌ Error creating fallback HTML file:', fallbackError);
+    // As a last resort, send the HTML directly in the response
+    return res.send(fallbackHTML);
+  }
 };
 
 // Root route serves React app
