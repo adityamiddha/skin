@@ -48,8 +48,17 @@ app.use(express.json());
 // ✅ Parse cookies for auth middleware
 app.use(cookieParser());
 
-// Serve static files from React build
-const buildPath = path.join(__dirname, '../client/build');
+// Determine the static files path based on environment
+// For Render deployment, the path is /opt/render/project/src/client/build
+// For local development, it's ../client/build relative to server directory
+let buildPath = path.join(__dirname, '../client/build');
+
+// Check if we're in Render environment
+if (process.env.RENDER && fs.existsSync('/opt/render/project/src/client/build')) {
+  buildPath = '/opt/render/project/src/client/build';
+  console.log('🚀 Running in Render environment');
+}
+
 console.log('🔍 Static files path:', buildPath);
 
 if (fs.existsSync(buildPath)) {
@@ -57,6 +66,21 @@ if (fs.existsSync(buildPath)) {
   app.use(express.static(buildPath));
 } else {
   console.log('❌ Build directory NOT found at:', buildPath);
+  // Try alternative paths for build directory
+  const altPaths = [
+    path.join(__dirname, '../../client/build'),
+    path.join(process.cwd(), 'client/build')
+  ];
+  
+  for (const altPath of altPaths) {
+    console.log('🔍 Trying alternative path:', altPath);
+    if (fs.existsSync(altPath)) {
+      console.log('✅ Build directory found at alternative path');
+      app.use(express.static(altPath));
+      buildPath = altPath; // Update buildPath to the working path
+      break;
+    }
+  }
 }
 
 // ROUTES
@@ -66,15 +90,44 @@ app.use('/api/scans', ScanResultsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/health', healthRoutes);
 
+// Function to serve index.html from the correct build path
+const serveIndexHtml = (res) => {
+  // First try using the established buildPath
+  const indexPath = path.join(buildPath, 'index.html');
+  
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  
+  // Try Render's path
+  if (process.env.RENDER) {
+    const renderPath = '/opt/render/project/src/client/build/index.html';
+    if (fs.existsSync(renderPath)) {
+      return res.sendFile(renderPath);
+    }
+  }
+  
+  // Try common alternatives
+  const altPaths = [
+    path.join(__dirname, '../client/build/index.html'),
+    path.join(__dirname, '../../client/build/index.html'),
+    path.join(process.cwd(), 'client/build/index.html')
+  ];
+  
+  for (const altPath of altPaths) {
+    if (fs.existsSync(altPath)) {
+      return res.sendFile(altPath);
+    }
+  }
+  
+  // If we reach here, we couldn't find the file
+  return res.status(404).send('React app not built. Please run: npm run build-client');
+};
+
 // Root route serves React app
 app.get('/', (req, res) => {
   try {
-    const indexPath = path.join(__dirname, '../client/build/index.html');
-    if (fs.existsSync(indexPath)) {
-      res.sendFile(indexPath);
-    } else {
-      res.status(404).send('React app not built. Please run: npm run build-client');
-    }
+    serveIndexHtml(res);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -87,11 +140,10 @@ app.get('/test', (req, res) => {
 
 // Catch-all for React Router
 app.use((req, res) => {
-  const indexPath = path.join(__dirname, '../client/build/index.html');
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    res.status(404).send('React app not found');
+  try {
+    serveIndexHtml(res);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
