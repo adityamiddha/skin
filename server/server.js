@@ -13,6 +13,7 @@ const authRoutes = require('./routes/authRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const ScanResultsRoutes = require('./routes/scanResultsRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const healthRoutes = require('./routes/healthRoutes');
 
 const app = express();
 // Enable trust proxy for secure cookies behind reverse proxies
@@ -63,6 +64,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/image', imageRoutes);
 app.use('/api/scans', ScanResultsRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/health', healthRoutes);
 
 // Root route serves React app
 app.get('/', (req, res) => {

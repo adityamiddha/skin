@@ -21,7 +21,8 @@
     "build-and-robust": "npm run build-client && npm run robust",
     "working": "node server/working-server.js",
     "build-and-working": "npm run build-client && npm run working",
-    "render-build": "npm install && cd client && npm install && npm run build && cd .."
+    "render-build": "npm install && cd client && npm install && npm run build && cd ..",
+    "health-check": "curl -s http://localhost:5000/api/health | json_pp"
   },
   "keywords": [],
   "author": "",
