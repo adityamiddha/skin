@@ -108,6 +108,7 @@ const PORT = process.env.PORT || 3000;
 console.log('🔍 Environment variables:');
 console.log('🔍 PORT:', process.env.PORT);
 console.log('🔍 MONGO_URI:', process.env.MONGO_URI ? '✅ Found' : '❌ Missing');
+console.log( 'mongo uri =',process.env.MONGO_URI);
 console.log('🔍 CLOUDINARY_CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME ? '✅ Found' : '❌ Missing');
 
 // Start server then connect MongoDB

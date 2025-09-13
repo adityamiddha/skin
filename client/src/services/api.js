@@ -8,7 +8,7 @@ const isLocalhost = typeof window !== 'undefined' &&
 
 const API_BASE_URL = isLocalhost
   ? 'http://localhost:3000/api'
-  : 'https://skin-sxau.onrender.com/api';
+  : `${window.location.origin}/api`;
 
 // Create axios instance with base configuration
 const api = axios.create({
