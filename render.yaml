@@ -11,6 +11,8 @@ services:
         value: 5000
       - key: RENDER
         value: "true"
+      - key: REACT_APP_BUILD_PATH
+        value: "/opt/render/project/src/client/build"
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET

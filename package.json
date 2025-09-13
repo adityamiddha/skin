@@ -21,7 +21,7 @@
     "build-and-robust": "npm run build-client && npm run robust",
     "working": "node server/working-server.js",
     "build-and-working": "npm run build-client && npm run working",
-    "render-build": "npm install && cd client && npm install && npm run build && cd .. && echo 'Build completed, checking paths:' && ls -la && ls -la client/build",
+    "render-build": "npm install && cd client && npm install && npm run build && cd .. && echo 'Build completed, running post-build setup...' && ./post-build.sh && echo 'Build directory contents:' && ls -la client/build",
     "health-check": "curl -s http://localhost:5000/api/health | json_pp",
     "debug-paths": "node -e \"console.log('CWD:', process.cwd()); console.log('__dirname:', __dirname); const fs=require('fs'); const path=require('path'); const paths = ['/opt/render/project/src/client/build', './client/build', '../client/build']; paths.forEach(p => console.log(p, fs.existsSync(p) ? 'EXISTS' : 'NOT FOUND'));\"",
     "debug-render": "node debug-render.js"

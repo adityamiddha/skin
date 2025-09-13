@@ -53,10 +53,42 @@ app.use(cookieParser());
 // For local development, it's ../client/build relative to server directory
 let buildPath = path.join(__dirname, '../client/build');
 
-// Check if we're in Render environment
-if (process.env.RENDER && fs.existsSync('/opt/render/project/src/client/build')) {
-  buildPath = '/opt/render/project/src/client/build';
-  console.log('🚀 Running in Render environment');
+// Log current working directory and environment
+console.log('🔍 Current working directory:', process.cwd());
+console.log('🔍 Server directory:', __dirname);
+console.log('🔍 Environment:', process.env.NODE_ENV);
+console.log('🔍 Render environment:', process.env.RENDER ? 'Yes' : 'No');
+console.log('🔍 Build path from env:', process.env.REACT_APP_BUILD_PATH || 'Not set');
+
+// Check for environment variable first (highest priority)
+if (process.env.REACT_APP_BUILD_PATH && fs.existsSync(process.env.REACT_APP_BUILD_PATH)) {
+  buildPath = process.env.REACT_APP_BUILD_PATH;
+  console.log(`🚀 Using build path from environment variable: ${buildPath}`);
+}
+// Check for temp directory that our post-build script creates
+else if (fs.existsSync('/tmp/client-build')) {
+  buildPath = '/tmp/client-build';
+  console.log(`🚀 Using temp build directory: ${buildPath}`);
+}
+// Check for Render-specific paths first
+const renderPaths = [
+  '/opt/render/project/src/client/build',
+  '/opt/render/project/client/build',
+  '/opt/render/project/src/server/client/build',
+  '/opt/render/project/src/client/build',
+  '/opt/render/project/client/build',
+  '/opt/build/client/build',
+  path.join(process.cwd(), 'client/build'),
+  path.join(process.cwd(), '../client/build')
+];
+
+// Check if any Render paths exist
+for (const renderPath of renderPaths) {
+  if (fs.existsSync(renderPath)) {
+    buildPath = renderPath;
+    console.log(`🚀 Found build directory at Render path: ${buildPath}`);
+    break;
+  }
 }
 
 console.log('🔍 Static files path:', buildPath);
@@ -69,7 +101,12 @@ if (fs.existsSync(buildPath)) {
   // Try alternative paths for build directory
   const altPaths = [
     path.join(__dirname, '../../client/build'),
-    path.join(process.cwd(), 'client/build')
+    path.join(process.cwd(), 'client/build'),
+    path.join(process.cwd(), '../client/build'),
+    path.join(__dirname, '../client/build'),
+    path.join(__dirname, '../../client/build'),
+    path.join(__dirname, '../../../client/build'),
+    path.join(__dirname, '../../../../client/build')
   ];
   
   for (const altPath of altPaths) {
@@ -99,10 +136,20 @@ const serveIndexHtml = (res) => {
     return res.sendFile(indexPath);
   }
   
-  // Try Render's path
-  if (process.env.RENDER) {
-    const renderPath = '/opt/render/project/src/client/build/index.html';
+  // Try Render's paths
+  const renderPaths = [
+    '/opt/render/project/src/client/build/index.html',
+    '/opt/render/project/client/build/index.html',
+    '/opt/render/project/src/server/client/build/index.html',
+    '/opt/render/project/src/client/build/index.html',
+    '/opt/render/project/client/build/index.html',
+    '/opt/build/client/build/index.html'
+  ];
+  
+  for (const renderPath of renderPaths) {
+    console.log('🔍 Trying Render index path:', renderPath);
     if (fs.existsSync(renderPath)) {
+      console.log('✅ Found index.html at Render path');
       return res.sendFile(renderPath);
     }
   }
@@ -111,16 +158,22 @@ const serveIndexHtml = (res) => {
   const altPaths = [
     path.join(__dirname, '../client/build/index.html'),
     path.join(__dirname, '../../client/build/index.html'),
-    path.join(process.cwd(), 'client/build/index.html')
+    path.join(__dirname, '../../../client/build/index.html'),
+    path.join(__dirname, '../../../../client/build/index.html'),
+    path.join(process.cwd(), 'client/build/index.html'),
+    path.join(process.cwd(), '../client/build/index.html')
   ];
   
   for (const altPath of altPaths) {
+    console.log('🔍 Trying alternative index path:', altPath);
     if (fs.existsSync(altPath)) {
+      console.log('✅ Found index.html at alternative path');
       return res.sendFile(altPath);
     }
   }
   
   // If we reach here, we couldn't find the file
+  console.log('❌ Could not find index.html in any location');
   return res.status(404).send('React app not built. Please run: npm run build-client');
 };
 
