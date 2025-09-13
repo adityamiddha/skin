@@ -52,11 +52,16 @@ for target_path in "${RENDER_BUILD_PATHS[@]}"; do
   fi
 done
 
-# Create /tmp location that's writable even with limited permissions
+# Create temporary build location in /tmp which is always writable
 TMP_BUILD_DIR="/tmp/client-build"
 echo "🔍 Creating temporary build location: $TMP_BUILD_DIR"
 mkdir -p "$TMP_BUILD_DIR" || { echo "❌ Failed to create temp directory"; }
 cp -r "$SOURCE_BUILD_DIR"/* "$TMP_BUILD_DIR/" || { echo "❌ Failed to copy to temp directory"; }
+
+# Copy build files to a location that Render will definitely see
+echo "🔍 Copying build files to current directory for absolute paths"
+mkdir -p "./build" || { echo "❌ Failed to create ./build directory"; }
+cp -r "$SOURCE_BUILD_DIR"/* "./build/" || { echo "❌ Failed to copy to ./build"; }
 
 # Set environment variable in the current session (will need to be propagated to child processes)
 export REACT_APP_BUILD_PATH="$(pwd)/$SOURCE_BUILD_DIR"

@@ -35,8 +35,21 @@ app.set('trust proxy', 1);
 // Configure CORS
 const corsOptions = {
   origin: function(origin, callback) {
-    // Allow any origin for now to debug
-    callback(null, true);
+    // Allow requests with no origin (like mobile apps, curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is allowed
+    const allowedOrigins = [
+      process.env.FRONTEND_URL, 
+      'https://skin-sxau.onrender.com', 
+      'http://localhost:3000'
+    ];
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.onrender.com')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
   },
   credentials: true,
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
@@ -94,6 +107,10 @@ const potentialBuildPaths = [
   path.join(__dirname, '../client/build'),
   path.join(__dirname, '../../client/build'),
   path.join(process.cwd(), 'client/build'),
+  // Root paths
+  path.join(process.cwd(), 'build'),
+  // Absolute root-relative paths (Render specific)
+  '/opt/render/project/src/build',
   // Fallback paths
   '/tmp/client-build',
   '/tmp/fallback-build'

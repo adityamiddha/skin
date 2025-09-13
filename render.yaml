@@ -12,7 +12,9 @@ services:
       - key: RENDER
         value: "true"
       - key: REACT_APP_BUILD_PATH
-        value: "/opt/render/project/src/client/build"
+        value: "/opt/render/project/src/build"
+      - key: FALLBACK_ENABLED
+        value: "true"
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET

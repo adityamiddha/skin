@@ -40,14 +40,28 @@ const pathsToCheck = [
   '/opt/render/project/src/server/client/build/index.html',
   '/opt/build/client/build',
   '/opt/build/client/build/index.html',
+  // New paths we're trying
+  '/opt/render/project/src/build',
+  '/opt/render/project/src/build/index.html',
+  '/opt/render/project/build',
+  '/opt/render/project/build/index.html',
+  // Temp location
+  '/tmp/client-build',
+  '/tmp/client-build/index.html',
+  '/tmp/fallback-build',
+  '/tmp/fallback-build/index.html',
   // Relative paths
   './client/build',
   './client/build/index.html',
+  './build',
+  './build/index.html',
   '../client/build',
   '../client/build/index.html',
   // Absolute paths based on cwd
   path.join(process.cwd(), 'client/build'),
   path.join(process.cwd(), 'client/build/index.html'),
+  path.join(process.cwd(), 'build'),
+  path.join(process.cwd(), 'build/index.html'),
   path.join(process.cwd(), '../client/build'),
   path.join(process.cwd(), '../client/build/index.html'),
   // Server relative paths

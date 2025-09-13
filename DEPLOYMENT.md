@@ -20,7 +20,10 @@ Make sure you have a clean copy of the repository without build files committed.
 ### Step 3: Configure Environment Variables
 Add the following environment variables in the Render dashboard:
 - `NODE_ENV`: production
-- `PORT`: 5000
+- `PORT`: 3000
+- `RENDER`: true
+- `REACT_APP_BUILD_PATH`: /opt/render/project/src/build
+- `FALLBACK_ENABLED`: true
 - `MONGO_URI`: Your MongoDB connection string
 - `JWT_SECRET`: A secure random string for JWT tokens
 - `CLOUDINARY_CLOUD_NAME`: Your Cloudinary cloud name
@@ -94,8 +97,17 @@ The `post-build.sh` script runs after the build to:
 - Create symbolic links for easier access
 - Set environment variables for path detection
 - Create a temporary fallback location in `/tmp`
+- Copy build files to the root `/build` directory for easier access
 
-### 4. Health Check Routes
+### 4. Build Path Strategy
+The application implements multiple fallback mechanisms to find build files:
+- Tries multiple potential paths where build files might be located
+- Uses environment variables to specify build paths
+- Creates symbolic links to ensure accessibility
+- Maintains a backup copy in `/tmp` directory
+- Creates a copy in the root `/build` directory
+
+### 5. Health Check Routes
 The application includes several health check endpoints:
 - `/api/health`: Comprehensive health check for all components
 - `/health`: Quick status check
@@ -107,3 +119,4 @@ If you encounter issues with deployment:
 2. Access the health check endpoints
 3. Try using the fallback server: `npm run start:render`
 4. Verify that the post-build script executed correctly
+5. Run the debug-render.js script to see file paths
