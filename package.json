@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/server.js",
     "dev": "nodemon server/server.js",
+    "dev:frontend": "cd client && npm start",
+    "dev:proxy": "node server/dev-proxy-server.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:frontend\" \"npm run dev:proxy\"",
     "setup": "node dev-setup.js",
     "build-client": "cd client && npm run build",
     "build-and-start": "npm run build-client && npm start",
@@ -29,9 +32,14 @@
     "cors": "^2.8.5",
     "dotenv": "^17.1.0",
     "express": "^5.1.0",
+    "http-proxy-middleware": "^2.0.9",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.1",
     "multer": "^2.0.2",
     "streamifier": "^0.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.10"
   }
 }

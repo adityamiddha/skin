@@ -1,14 +1,9 @@
 import axios from 'axios';
 
 // Determine API base URL dynamically based on environment
-// - Local dev: http://localhost:3000/api
-// - Production (Render): https://skin-sxau.onrender.com/api
-const isLocalhost = typeof window !== 'undefined' &&
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
-const API_BASE_URL = isLocalhost
-  ? 'http://localhost:3000/api'
-  : `${window.location.origin}/api`;
+// In development: will use the proxy in package.json
+// In production: will use relative path to the current origin
+const API_BASE_URL = '/api';
 
 // Create axios instance with base configuration
 const api = axios.create({

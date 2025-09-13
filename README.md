@@ -36,68 +36,129 @@ git clone <repository-url>
 cd skincare-ai-project
 ```
 
-### 2. Install Dependencies
+### 2. Automated Setup
 
-#### Backend Dependencies
+We provide an automatic setup script that installs dependencies and creates configuration files:
+
 ```bash
-npm install
+npm run setup
 ```
 
-#### Frontend Dependencies
-```bash
-cd client
-npm install
-cd ..
-```
+This will:
+- Install backend dependencies
+- Install frontend dependencies
+- Create a sample .env file if it doesn't exist
 
 ### 3. Environment Setup
 
-Create a `.env` file in the root directory:
+Update the `.env` file in the root directory with your credentials:
 
 ```env
 # Server Configuration
 PORT=5000
 NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+DEV_PROXY_PORT=8080
+FRONTEND_PORT=3000
 
 # MongoDB
 MONGO_URI=mongodb://localhost:27017/skincare-ai
 
 # JWT
 JWT_SECRET=your-super-secret-jwt-key-here
+JWT_EXPIRES_IN=90d
+JWT_COOKIE_EXPIRES_IN=90
 
 # Cloudinary
 CLOUDINARY_CLOUD_NAME=your-cloud-name
-CLOUDINARY_API=your-api-key
+CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 ```
 
 ### 4. Start the Application
 
-#### Development Mode
+#### Development Mode (Separate Servers)
 ```bash
 # Terminal 1: Start Backend Server
-npm start
+npm run dev
 
-# Terminal 2: Start Frontend (in client directory)
-cd client
-npm start
+# Terminal 2: Start Frontend 
+npm run dev:frontend
+```
+
+#### Development Mode with Proxy (Recommended)
+This runs a proxy server that handles both frontend and backend requests:
+
+```bash
+# Run all services with one command
+npm run dev:all
+
+# Access at http://localhost:8080
 ```
 
 #### Production Mode
 ```bash
-# Build frontend
-cd client
-npm run build
-
-# Start server (serves built frontend)
-npm start
+# Build frontend and start production server
+npm run build-and-start
 ```
 
 ### 5. Access the Application
 
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:5000
-- **Landing Page**: http://localhost:5000 (when frontend is built)
+- **Development with Proxy**: http://localhost:8080
+- **Development Frontend**: http://localhost:3000
+- **Development Backend API**: http://localhost:5000/api
+- **Production**: http://localhost:5000
+
+## 🌐 Deployment
+
+### 1. Production Environment Setup
+
+Create a `.env.production` file based on the example:
+
+```env
+# Server Configuration
+PORT=5000
+NODE_ENV=production
+FRONTEND_URL=https://your-production-domain.com
+
+# MongoDB
+MONGO_URI=mongodb+srv://username:password@your-cluster.mongodb.net/skincare-ai
+
+# JWT
+JWT_SECRET=your-production-jwt-secret
+JWT_EXPIRES_IN=90d
+JWT_COOKIE_EXPIRES_IN=90
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+```
+
+### 2. Build for Production
+
+```bash
+npm run build-client
+```
+
+### 3. Start Production Server
+
+```bash
+NODE_ENV=production npm start
+```
+
+### 4. Deployment Platforms
+
+#### Render.com (Recommended)
+- Create a web service
+- Set the build command: `npm install && npm run build-client`
+- Set the start command: `npm start`
+- Add environment variables from your `.env.production`
+
+#### Railway/Heroku/Digital Ocean
+- Similar setup to Render
+- Make sure to set all environment variables
+- The app is configured to work behind reverse proxies
 
 ## 📁 Project Structure
 

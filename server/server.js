@@ -15,38 +15,31 @@ const ScanResultsRoutes = require('./routes/scanResultsRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
-// behind Render's proxy; needed for secure cookies and req.secure
+// Enable trust proxy for secure cookies behind reverse proxies
 app.set('trust proxy', 1);
 
-// ✅ Proper CORS setup for all devices and environments
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:3000",
-  "https://skin-sxau.onrender.com",
-  "https://skin-sxau.onrender.com",
-];
+// ✅ Proper CORS setup for all environments
+const corsOptions = {
+  // In production, we'll restrict origins
+  origin: process.env.NODE_ENV === 'production'
+    ? [
+        // Add your production domains here
+        process.env.FRONTEND_URL || 'https://skin-sxau.onrender.com',
+        /\.onrender\.com$/  // Allow any onrender.com subdomain
+      ]
+    : [
+        // In development, allow local development servers
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:5173'
+      ],
+  credentials: true,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
+};
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like Postman)
-      if (!origin) return callback(null, true);
-      // allow exact matches in whitelist
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      // allow any onrender.com subdomain (mobile browsers can rewrite to regional domains)
-      const onrenderRegex = /^https?:\/\/[a-z0-9-]+\.onrender\.com$/i;
-      if (onrenderRegex.test(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error('Not allowed by CORS'));
-    },
-    credentials: true,
-    methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-    allowedHeaders: ['Content-Type','Authorization'],
-  })
-);
+app.use(cors(corsOptions));
 
 
 // ✅ Parse JSON
@@ -103,12 +96,12 @@ app.use((req, res) => {
 // GLOBAL ERROR HANDLER
 app.use(globalErrorHandler);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 console.log('🔍 Environment variables:');
-console.log('🔍 PORT:', process.env.PORT);
+console.log('🔍 NODE_ENV:', process.env.NODE_ENV || 'development');
+console.log('🔍 PORT:', PORT);
 console.log('🔍 MONGO_URI:', process.env.MONGO_URI ? '✅ Found' : '❌ Missing');
-console.log( 'mongo uri =',process.env.MONGO_URI);
 console.log('🔍 CLOUDINARY_CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME ? '✅ Found' : '❌ Missing');
 
 // Start server then connect MongoDB

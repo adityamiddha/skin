@@ -1,15 +1,35 @@
-﻿# # dependencies
-# node_modules/
-# client/node_modules/
-# server/node_modules/
-# # environment variables
-# .env
-# # build files
-# dist/
-# build/
-# .next/
-# # logs
-# *.log
-# # system files
-# .DS_Store
-# Thumbs.db
+﻿# dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+ai-model/venv/
+ai-model/__pycache__/
+
+# environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# build files
+dist/
+build/
+client/build/
+.next/
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# system files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo

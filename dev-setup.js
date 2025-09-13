@@ -42,12 +42,15 @@ if (!fs.existsSync(envPath)) {
   const envContent = `# Server Configuration
 PORT=5000
 NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
 
 # MongoDB
 MONGO_URI=mongodb://localhost:27017/skincare-ai
 
 # JWT
 JWT_SECRET=your-super-secret-jwt-key-here-change-this-in-production
+JWT_EXPIRES_IN=90d
+JWT_COOKIE_EXPIRES_IN=90
 
 # Cloudinary
 CLOUDINARY_CLOUD_NAME=your-cloud-name
@@ -62,19 +65,46 @@ CLOUDINARY_API_SECRET=your-api-secret
   console.log('✅ .env file already exists');
 }
 
+// Create .env.production example file
+const envProdPath = path.join(__dirname, '.env.production.example');
+if (!fs.existsSync(envProdPath)) {
+  console.log('\n📝 Creating .env.production.example file...');
+  const envProdContent = `# Server Configuration
+PORT=5000
+NODE_ENV=production
+FRONTEND_URL=https://your-production-domain.com
+
+# MongoDB
+MONGO_URI=mongodb+srv://username:password@your-mongodb-cluster.mongodb.net/skincare-ai?retryWrites=true&w=majority
+
+# JWT
+JWT_SECRET=your-super-secret-jwt-key-here-change-this-in-production
+JWT_EXPIRES_IN=90d
+JWT_COOKIE_EXPIRES_IN=90
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+`;
+  
+  fs.writeFileSync(envProdPath, envProdContent);
+  console.log('✅ .env.production.example file created');
+}
+
 console.log('\n🎉 Setup completed successfully!');
 console.log('\n📋 Next steps:');
 console.log('1. Update the .env file with your MongoDB and Cloudinary credentials');
 console.log('2. Start MongoDB service');
 console.log('3. Run the following commands to start the application:');
-console.log('\n   # Terminal 1 - Start backend server');
-console.log('   npm start');
+console.log('\n   # Development mode (separate servers)');
+console.log('   # Terminal 1 - Start backend server');
+console.log('   npm run dev');
 console.log('\n   # Terminal 2 - Start frontend (development mode)');
 console.log('   cd client && npm start');
-console.log('\n   # Or build and serve frontend from backend');
-console.log('   cd client && npm run build && cd .. && npm start');
+console.log('\n   # Production mode (single server)');
+console.log('   npm run build-and-start');
 console.log('\n🌐 Access the application:');
-console.log('   - Frontend (dev): http://localhost:3000');
-console.log('   - Backend API: http://localhost:5000');
+console.log('   - Development Frontend: http://localhost:3000');
+console.log('   - Development Backend API: http://localhost:5000/api');
 console.log('   - Production: http://localhost:5000');
-
