@@ -34,10 +34,10 @@ app.set('trust proxy', 1);
 
 // Configure CORS
 const corsOptions = {
-  origin: [
-    process.env.FRONTEND_URL || 'https://skin-sxau.onrender.com',
-    /\.onrender\.com$/  // Allow any onrender.com subdomain
-  ],
+  origin: function(origin, callback) {
+    // Allow any origin for now to debug
+    callback(null, true);
+  },
   credentials: true,
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type','Authorization'],

@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/server.js",
     "start:render": "node server/render-server.js",
+    "start:port3000": "PORT=3000 node server/server.js",
+    "start:render:port3000": "PORT=3000 node server/render-server.js",
     "dev": "nodemon server/server.js",
     "dev:frontend": "cd client && npm start",
     "dev:proxy": "node server/dev-proxy-server.js",
