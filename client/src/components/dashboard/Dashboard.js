@@ -34,7 +34,7 @@ const Dashboard = () => {
     toast.success('Logged out successfully');
   };
 
-  const handleImageUpload = async (file) => {
+  const handleImageUpload = async file => {
     setLoading(true);
     try {
       const formData = new FormData();
@@ -42,15 +42,15 @@ const Dashboard = () => {
 
       const response = await imageAPI.uploadImage(formData);
       toast.success('Image uploaded successfully!');
-      
+
       // Refresh images list
       await fetchImages();
-      
+
       // Automatically analyze the uploaded image
       if (response.data.savedImage) {
         await analyzeImage(response.data.savedImage._id);
       }
-      
+
       setActiveTab('history');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to upload image');
@@ -59,7 +59,7 @@ const Dashboard = () => {
     }
   };
 
-  const analyzeImage = async (imageId) => {
+  const analyzeImage = async imageId => {
     try {
       const response = await aiAPI.analyzeImage(imageId);
       toast.success('AI analysis completed! Check your scan history.');
@@ -95,11 +95,9 @@ const Dashboard = () => {
               <div className="h-10 w-10 bg-gradient-to-r from-primary-500 to-skin-500 rounded-lg flex items-center justify-center">
                 <span className="text-xl text-white font-bold">S</span>
               </div>
-              <h1 className="ml-3 text-xl font-semibold text-gray-900">
-                SkinCare AI
-              </h1>
+              <h1 className="ml-3 text-xl font-semibold text-gray-900">SkinCare AI</h1>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <div className="h-8 w-8 bg-primary-100 rounded-full flex items-center justify-center">
@@ -138,21 +136,21 @@ const Dashboard = () => {
                 <span>Upload & Scan</span>
               </div>
             </button>
-            
-                         <button
-               onClick={() => setActiveTab('history')}
-               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
-                 activeTab === 'history'
-                   ? 'border-primary-500 text-primary-600'
-                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-               }`}
-             >
-               <div className="flex items-center space-x-2">
-                 <FiClock className="h-5 w-5" />
-                 <span>Scan History</span>
-               </div>
-             </button>
-            
+
+            <button
+              onClick={() => setActiveTab('history')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+                activeTab === 'history'
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <FiClock className="h-5 w-5" />
+                <span>Scan History</span>
+              </div>
+            </button>
+
             <button
               onClick={() => setActiveTab('profile')}
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
@@ -172,9 +170,7 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          {renderTabContent()}
-        </div>
+        <div className="px-4 py-6 sm:px-0">{renderTabContent()}</div>
       </main>
     </div>
   );

@@ -14,11 +14,11 @@ const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -37,16 +37,16 @@ const SignupForm = () => {
     return true;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setLoading(true);
 
     try {
       const result = await signup(formData.name, formData.email, formData.password);
-      
+
       if (result.success) {
         toast.success('Account created successfully! Welcome to SkinCare AI!');
         navigate('/dashboard');
@@ -67,9 +67,7 @@ const SignupForm = () => {
           <div className="mx-auto h-16 w-16 bg-gradient-to-r from-primary-500 to-skin-500 rounded-full flex items-center justify-center">
             <span className="text-2xl text-white font-bold">S</span>
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Create your account
-          </h2>
+          <h2 className="mt-6 text-3xl font-bold text-gray-900">Create your account</h2>
           <p className="mt-2 text-sm text-gray-600">
             Join SkinCare AI and start your skin health journey
           </p>
@@ -223,4 +221,3 @@ const SignupForm = () => {
 };
 
 export default SignupForm;
-

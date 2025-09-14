@@ -18,6 +18,10 @@ build/
 client/build/
 .next/
 
+# deployment files
+deployment_*/
+/deployment_*/
+
 # logs
 *.log
 npm-debug.log*

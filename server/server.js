@@ -26,10 +26,12 @@ const PORT = process.env.PORT || 5000;
 app.set('trust proxy', 1);
 
 // Simple CORS setup
-app.use(cors({
-  credentials: true,
-  origin: true // Allow all origins
-}));
+app.use(
+  cors({
+    credentials: true,
+    origin: true, // Allow all origins
+  })
+);
 
 // Middleware
 app.use(express.json());
@@ -52,12 +54,12 @@ app.use('/api/health', healthRoutes);
 if (process.env.NODE_ENV === 'production') {
   const buildPath = path.join(__dirname, '../client/build');
   console.log('📂 Serving static files from:', buildPath);
-  
+
   // Serve static files
   app.use(express.static(buildPath));
-  
+
   // Handle react routing - send all non-api requests to index.html
-  app.use(function(req, res, next) {
+  app.use(function (req, res, next) {
     if (req.url.startsWith('/api/')) {
       return next();
     }
@@ -66,7 +68,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // 404 handler - must come after all routes and static files
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
@@ -77,7 +79,7 @@ app.use(globalErrorHandler);
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`🌐 Access your API at: http://localhost:${PORT}/api`);
-  
+
   // Connect to MongoDB
   mongoose
     .connect(process.env.MONGO_URI)

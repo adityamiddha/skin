@@ -7,7 +7,7 @@ const ImageUpload = ({ onImageUpload, loading }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
 
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback(acceptedFiles => {
     const file = acceptedFiles[0];
     if (file) {
       setSelectedFile(file);
@@ -20,13 +20,13 @@ const ImageUpload = ({ onImageUpload, loading }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp']
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp'],
     },
     multiple: false,
     maxSize: 5 * 1024 * 1024, // 5MB
   });
 
-  const handleFileSelect = (event) => {
+  const handleFileSelect = event => {
     const file = event.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
@@ -86,12 +86,8 @@ const ImageUpload = ({ onImageUpload, loading }) => {
               <p className="text-lg font-medium text-gray-900 mb-2">
                 {isDragActive ? 'Drop your image here' : 'Drag & drop your image here'}
               </p>
-              <p className="text-sm text-gray-500 mb-4">
-                or click to browse files
-              </p>
-              <p className="text-xs text-gray-400">
-                Supports: JPG, PNG, GIF, BMP (Max: 5MB)
-              </p>
+              <p className="text-sm text-gray-500 mb-4">or click to browse files</p>
+              <p className="text-xs text-gray-400">Supports: JPG, PNG, GIF, BMP (Max: 5MB)</p>
             </div>
 
             {/* Alternative Upload Methods */}
@@ -122,9 +118,7 @@ const ImageUpload = ({ onImageUpload, loading }) => {
           <div className="space-y-6">
             {/* Preview */}
             <div className="text-center">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Image Preview
-              </h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Image Preview</h3>
               <div className="relative inline-block">
                 <img
                   src={preview}
@@ -168,9 +162,7 @@ const ImageUpload = ({ onImageUpload, loading }) => {
 
         {/* Tips */}
         <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="text-sm font-medium text-blue-800 mb-2">
-            💡 Tips for Best Results
-          </h4>
+          <h4 className="text-sm font-medium text-blue-800 mb-2">💡 Tips for Best Results</h4>
           <ul className="text-sm text-blue-700 space-y-1">
             <li>• Ensure good lighting for clear image quality</li>
             <li>• Keep the camera steady and focused</li>
@@ -184,4 +176,3 @@ const ImageUpload = ({ onImageUpload, loading }) => {
 };
 
 export default ImageUpload;
-

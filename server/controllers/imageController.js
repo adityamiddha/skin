@@ -10,7 +10,7 @@ exports.uploadImage = catchAsync(async (req, res, next) => {
     return next(new AppError('No image file provided', 400));
   }
 
-  const streamUpload = (req) => {
+  const streamUpload = req => {
     return new Promise((resolve, reject) => {
       let stream = cloudinary.uploader.upload_stream(
         { folder: 'skinApp', resource_type: 'image' },
@@ -30,14 +30,14 @@ exports.uploadImage = catchAsync(async (req, res, next) => {
 
   const savedImage = await Image.create({
     imageUrl: result.secure_url,
-    uploadedBy: req.user._id
+    uploadedBy: req.user._id,
   });
 
   res.status(200).json({
     status: 'success',
     message: 'Image uploaded and saved to DB!',
     url: result.secure_url,
-    savedImage
+    savedImage,
   });
 });
 
@@ -48,6 +48,6 @@ exports.getMyImages = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     count: images.length,
-    images
+    images,
   });
 });

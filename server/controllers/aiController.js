@@ -18,19 +18,19 @@ exports.analyzeImage = catchAsync(async (req, res, next) => {
     wrinkles: Math.floor(Math.random() * 100),
     acne: Math.floor(Math.random() * 100),
     darkSpots: Math.floor(Math.random() * 100),
-    hydration: Math.floor(Math.random() * 100)
+    hydration: Math.floor(Math.random() * 100),
   };
 
   // 3. Save to ScanResult collection
   const newResult = await ScanResult.create({
     uploadedBy: userId,
     image: imageId,
-    aiScores
+    aiScores,
   });
 
   res.status(201).json({
     status: 'success',
     message: 'AI scan completed and result saved',
-    data: newResult
+    data: newResult,
   });
 });

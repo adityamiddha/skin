@@ -1,26 +1,26 @@
 const mongoose = require('mongoose');
 
-const scanResultsSchema = new mongoose.Schema({
-
+const scanResultsSchema = new mongoose.Schema(
+  {
     uploadedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
 
     image: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Image',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Image',
+      required: true,
     },
     aiScores: {
-        acne: Number,
-        darkSpots: Number,
-        hydration: Number,
-        wrinkles: Number
-    }
-},
-   {timestamps: true }
+      acne: Number,
+      darkSpots: Number,
+      hydration: Number,
+      wrinkles: Number,
+    },
+  },
+  { timestamps: true }
 );
 
 const ScanResult = mongoose.model('ScanResult', scanResultsSchema);

@@ -16,22 +16,22 @@ const api = axios.create({
 
 // Request interceptor to add auth token (still optional if you keep JWT in localStorage)
 api.interceptors.request.use(
-  (config) => {
+  config => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 );
 
 // Response interceptor to handle auth errors
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     console.error('API Error:', error.response?.status, error.response?.data);
-    
+
     if (error.response?.status === 401 || error.response?.status === 403) {
       // Only redirect to login if not already on login or signup page
       const currentPath = window.location.pathname;
@@ -48,16 +48,16 @@ api.interceptors.response.use(
 
 // Auth API calls
 export const authAPI = {
-  signup: (userData) => api.post('/auth/signup', userData),
-  login: (credentials) => api.post('/auth/login', credentials),
+  signup: userData => api.post('/auth/signup', userData),
+  login: credentials => api.post('/auth/login', credentials),
   getMe: () => api.get('/auth/getMe'),
-  updateMe: (userData) => api.patch('/auth/updateMe', userData),
-  updatePassword: (passwordData) => api.patch('/auth/updateMyPassword', passwordData),
+  updateMe: userData => api.patch('/auth/updateMe', userData),
+  updatePassword: passwordData => api.patch('/auth/updateMyPassword', passwordData),
 };
 
 // Image API calls
 export const imageAPI = {
-  uploadImage: (formData) =>
+  uploadImage: formData =>
     api.post('/image/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
@@ -66,14 +66,14 @@ export const imageAPI = {
 
 // AI API calls
 export const aiAPI = {
-  analyzeImage: (imageId) => api.post(`/ai/scan/${imageId}`),
+  analyzeImage: imageId => api.post(`/ai/scan/${imageId}`),
 };
 
 // Scan Results API calls
 export const scanResultsAPI = {
-  createScanResult: (scanData) => api.post('/scans', scanData),
+  createScanResult: scanData => api.post('/scans', scanData),
   getMyScanResults: () => api.get('/scans/my-scans'),
-  compareScanResults: (scanIds) => api.post('/scans/compare-scans', scanIds),
+  compareScanResults: scanIds => api.post('/scans/compare-scans', scanIds),
 };
 
 export default api;

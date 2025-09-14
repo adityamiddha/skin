@@ -1,6 +1,6 @@
 /**
  * Development Proxy Server
- * 
+ *
  * This server serves as a development proxy that:
  * 1. Forwards API requests to the backend server
  * 2. Serves React frontend from the development server
@@ -33,7 +33,7 @@ const apiProxy = createProxyMiddleware('/api', {
         proxyReq.setHeader('Cookie', cookieString);
       }
     }
-  }
+  },
 });
 
 // Frontend proxy middleware

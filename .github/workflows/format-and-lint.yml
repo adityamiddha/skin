@@ -1,0 +1,110 @@
+name: Format and Lint Code
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  format-and-lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          # Full git history is needed to get a proper list of changed files
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          npm ci || npm install
+          cd client && (npm ci || npm install) && cd ..
+          
+      - name: Install ESLint and Prettier if not in package.json
+        run: |
+          if ! grep -q "eslint" package.json; then
+            npm install --save-dev eslint prettier eslint-config-prettier eslint-plugin-prettier eslint-plugin-react @typescript-eslint/eslint-plugin @typescript-eslint/parser
+          fi
+          
+      - name: Create ESLint config if not exists
+        run: |
+          if [ ! -f .eslintrc.js ]; then
+            echo "module.exports = {
+              env: {
+                browser: true,
+                es2021: true,
+                node: true,
+              },
+              extends: [
+                'eslint:recommended',
+                'plugin:react/recommended',
+                'plugin:prettier/recommended',
+              ],
+              parserOptions: {
+                ecmaFeatures: {
+                  jsx: true,
+                },
+                ecmaVersion: 12,
+                sourceType: 'module',
+              },
+              plugins: ['react', 'prettier'],
+              rules: {
+                'prettier/prettier': 'error',
+                'react/prop-types': 'off',
+                'react/react-in-jsx-scope': 'off',
+                'no-unused-vars': 'warn',
+              },
+              settings: {
+                react: {
+                  version: 'detect',
+                },
+              },
+            };" > .eslintrc.js
+          fi
+          
+      - name: Create Prettier config if not exists
+        run: |
+          if [ ! -f .prettierrc ]; then
+            echo '{
+              "semi": true,
+              "tabWidth": 2,
+              "printWidth": 100,
+              "singleQuote": true,
+              "trailingComma": "es5",
+              "bracketSpacing": true,
+              "arrowParens": "avoid"
+            }' > .prettierrc
+          fi
+          
+      - name: Run Prettier
+        run: |
+          npx prettier --write "**/*.{js,jsx,ts,tsx,json,css,md}"
+          
+      - name: Run ESLint
+        run: |
+          npx eslint --fix "**/*.{js,jsx,ts,tsx}" || echo "Linting issues found, but continuing..."
+          
+      - name: Check for changes
+        id: git-check
+        run: |
+          git status --porcelain
+          echo "modified=$(if git status --porcelain | grep .; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
+          
+      - name: Commit changes
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git commit -m "style: format code with prettier and fix linting issues"
+          git push

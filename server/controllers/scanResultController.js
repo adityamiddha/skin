@@ -14,13 +14,13 @@ exports.createScanResult = catchAsync(async (req, res, next) => {
   const newResult = await ScanResult.create({
     uploadedBy: req.user._id,
     image: imageId,
-    aiScores
+    aiScores,
   });
 
   res.status(201).json({
     status: 'success',
     message: 'Scan result saved successfully!',
-    data: newResult
+    data: newResult,
   });
 });
 
@@ -33,7 +33,7 @@ exports.getMyScanResults = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     results: results.length,
-    data: results
+    data: results,
   });
 });
 
@@ -68,7 +68,7 @@ exports.compareScanResults = catchAsync(async (req, res, next) => {
       comparison[key] = {
         before: scores1[key],
         after: scores2[key],
-        difference: scores1[key] - scores2[key] // positive = improvement
+        difference: scores1[key] - scores2[key], // positive = improvement
       };
     }
   }
@@ -76,6 +76,6 @@ exports.compareScanResults = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     message: 'Comparison successful',
-    comparison
+    comparison,
   });
 });

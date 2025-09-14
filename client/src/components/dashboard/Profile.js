@@ -9,46 +9,46 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
     email: user?.email || '',
   });
-  
+
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   });
-  
+
   const [showPasswords, setShowPasswords] = useState({
     current: false,
     new: false,
     confirm: false,
   });
 
-  const handleProfileChange = (e) => {
+  const handleProfileChange = e => {
     setProfileData({
       ...profileData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = e => {
     setPasswordData({
       ...passwordData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const togglePasswordVisibility = (field) => {
+  const togglePasswordVisibility = field => {
     setShowPasswords(prev => ({
       ...prev,
-      [field]: !prev[field]
+      [field]: !prev[field],
     }));
   };
 
-  const handleProfileUpdate = async (e) => {
+  const handleProfileUpdate = async e => {
     e.preventDefault();
     setLoading(true);
 
@@ -64,14 +64,14 @@ const Profile = () => {
     }
   };
 
-  const handlePasswordUpdate = async (e) => {
+  const handlePasswordUpdate = async e => {
     e.preventDefault();
-    
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast.error('New passwords do not match');
       return;
     }
-    
+
     if (passwordData.newPassword.length < 6) {
       toast.error('New password must be at least 6 characters long');
       return;
@@ -84,7 +84,7 @@ const Profile = () => {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       });
-      
+
       setIsChangingPassword(false);
       setPasswordData({
         currentPassword: '',
@@ -134,7 +134,7 @@ const Profile = () => {
             )}
           </div>
         </div>
-        
+
         <div className="px-6 py-6">
           {isEditing ? (
             <form onSubmit={handleProfileUpdate} className="space-y-4">
@@ -214,7 +214,7 @@ const Profile = () => {
                   <p className="text-base text-gray-900">{user?.name}</p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-3">
                 <FiMail className="h-5 w-5 text-gray-400" />
                 <div>
@@ -243,12 +243,15 @@ const Profile = () => {
             )}
           </div>
         </div>
-        
+
         <div className="px-6 py-6">
           {isChangingPassword ? (
             <form onSubmit={handlePasswordUpdate} className="space-y-4">
               <div>
-                <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="currentPassword"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Current Password
                 </label>
                 <div className="mt-1 relative">
@@ -312,7 +315,10 @@ const Profile = () => {
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Confirm New Password
                 </label>
                 <div className="mt-1 relative">
@@ -386,7 +392,7 @@ const Profile = () => {
         <div className="px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-900">Account Information</h3>
         </div>
-        
+
         <div className="px-6 py-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -395,7 +401,7 @@ const Profile = () => {
                 {user?.role || 'user'}
               </span>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-500">Member Since</span>
               <span className="text-sm text-gray-900">
@@ -410,4 +416,3 @@ const Profile = () => {
 };
 
 export default Profile;
-

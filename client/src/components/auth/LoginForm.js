@@ -11,24 +11,24 @@ const LoginForm = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const result = await login(formData.email, formData.password);
-      
+
       if (result.success) {
         toast.success('Login successful! Welcome back!');
         navigate('/dashboard');
@@ -49,12 +49,8 @@ const LoginForm = () => {
           <div className="mx-auto h-16 w-16 bg-gradient-to-r from-primary-500 to-skin-500 rounded-full flex items-center justify-center">
             <span className="text-2xl text-white font-bold">S</span>
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Welcome back
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to your SkinCare AI account
-          </p>
+          <h2 className="mt-6 text-3xl font-bold text-gray-900">Welcome back</h2>
+          <p className="mt-2 text-sm text-gray-600">Sign in to your SkinCare AI account</p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -150,4 +146,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-

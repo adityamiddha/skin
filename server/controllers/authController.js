@@ -11,9 +11,9 @@ const sendTokenResponse = (user, statusCode, req, res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const cookieOptions = {
     httpOnly: true,
-    secure: isProduction,                // secure cookies only in production/HTTPS
+    secure: isProduction, // secure cookies only in production/HTTPS
     sameSite: isProduction ? 'None' : 'Lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   };
 
   res.cookie('jwt', token, cookieOptions);
@@ -25,9 +25,9 @@ const sendTokenResponse = (user, statusCode, req, res) => {
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
-      }
-    }
+        email: user.email,
+      },
+    },
   });
 };
 
@@ -79,7 +79,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: { user }
+    data: { user },
   });
 });
 
@@ -99,6 +99,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: { user: updatedUser }
+    data: { user: updatedUser },
   });
 });

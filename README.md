@@ -45,6 +45,7 @@ npm run setup
 ```
 
 This will:
+
 - Install backend dependencies
 - Install frontend dependencies
 - Create a sample .env file if it doesn't exist
@@ -78,15 +79,17 @@ CLOUDINARY_API_SECRET=your-api-secret
 ### 4. Start the Application
 
 #### Development Mode (Separate Servers)
+
 ```bash
 # Terminal 1: Start Backend Server
 npm run dev
 
-# Terminal 2: Start Frontend 
+# Terminal 2: Start Frontend
 npm run dev:frontend
 ```
 
 #### Development Mode with Proxy (Recommended)
+
 This runs a proxy server that handles both frontend and backend requests:
 
 ```bash
@@ -97,6 +100,7 @@ npm run dev:all
 ```
 
 #### Production Mode
+
 ```bash
 # Build frontend and start production server
 npm run build-and-start
@@ -115,35 +119,42 @@ npm run build-and-start
 
 This project is configured for easy deployment on [Render](https://render.com). Follow these steps:
 
-1. **Fork/Clone the Repository**
-   Make sure you have a clean copy without build files committed.
-
-2. **Create a New Web Service on Render**
-   - Go to [Render Dashboard](https://dashboard.render.com/)
-   - Click "New" and select "Web Service"
+1. **Create a Web Service**
+   - Sign up or log in to [Render](https://render.com)
+   - Click on "New" and select "Web Service"
    - Connect your GitHub repository
-   - Configure:
-     - **Name**: skincare-ai (or preferred name)
-     - **Runtime**: Node
-     - **Build Command**: `npm run render-build`
-     - **Start Command**: `npm start`
+
+2. **Configure the Service**
+   - Name: `skincare-ai` (or your preferred name)
+   - Environment: `Node`
+   - Build Command: `./render-build.sh`
+   - Start Command: `npm start`
+   - Region: Choose the closest to your users
+   - Branch: `main` (or your deployment branch)
+   - Plan: Select an appropriate plan (Free tier works for testing)
 
 3. **Configure Environment Variables**
-   Add the following in the Render dashboard:
-   ```
-   NODE_ENV=production
-   PORT=5000
-   MONGO_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   CLOUDINARY_CLOUD_NAME=your_cloud_name
-   CLOUDINARY_API_KEY=your_api_key
-   CLOUDINARY_API_SECRET=your_api_secret
-   ```
+   Set the following in the Render dashboard:
+   - `PORT`: 10000 (or any port, Render will assign its own port with $PORT)
+   - `MONGO_URI`: Your MongoDB connection string
+   - `JWT_SECRET`: Your JWT secret key
+   - `CLOUDINARY_CLOUD_NAME`: Your Cloudinary cloud name
+   - `CLOUDINARY_API_KEY`: Your Cloudinary API key
+   - `CLOUDINARY_API_SECRET`: Your Cloudinary API secret
+   - `NODE_ENV`: production
 
-4. **Deploy**
+4. **Health Checks**
+   - Add a health check to monitor your deployment
+   - URL Path: `/api/health`
+   - Status: 200 OK
+
+5. **Deploy**
    Click "Create Web Service" and Render will automatically deploy your application.
 
-For more detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+For more detailed deployment instructions and troubleshooting, see:
+
+- [DEPLOYMENT.md](DEPLOYMENT.md) - General deployment guide
+- [PLATFORM_DEPLOYMENT.md](PLATFORM_DEPLOYMENT.md) - Platform-specific deployment instructions
 
 ### Manual Deployment
 
@@ -184,12 +195,14 @@ NODE_ENV=production npm start
 ### 4. Deployment Platforms
 
 #### Render.com (Recommended)
+
 - Create a web service
 - Set the build command: `npm install && npm run build-client`
 - Set the start command: `npm start`
 - Add environment variables from your `.env.production`
 
 #### Railway/Heroku/Digital Ocean
+
 - Similar setup to Render
 - Make sure to set all environment variables
 - The app is configured to work behind reverse proxies
@@ -225,6 +238,7 @@ skincare-ai-project/
 ## 🔧 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/signup` - User registration
 - `POST /api/auth/login` - User login
 - `GET /api/auth/getMe` - Get current user
@@ -232,13 +246,16 @@ skincare-ai-project/
 - `PATCH /api/auth/updateMyPassword` - Change password
 
 ### Images
+
 - `POST /api/image/upload` - Upload skin image
 - `GET /api/image/my-images` - Get user's images
 
 ### AI Analysis
+
 - `POST /api/ai/scan/:imageId` - Analyze image with AI
 
 ### Scan Results
+
 - `POST /api/scans` - Create scan result
 - `GET /api/scans/my-scans` - Get user's scan history
 - `POST /api/scans/compare-scans` - Compare two scans
@@ -246,16 +263,19 @@ skincare-ai-project/
 ## 🎨 Frontend Features
 
 ### Authentication Pages
+
 - **Landing Page**: Welcome screen with login/signup options
 - **Login Form**: Email/password authentication
 - **Signup Form**: User registration with validation
 
 ### Dashboard
+
 - **Upload & Scan**: Image upload with drag & drop
 - **Scan History**: View and compare scan results
 - **Profile Management**: Update personal information
 
 ### UI Components
+
 - Responsive design with Tailwind CSS
 - Modern card-based layout
 - Interactive forms with validation
@@ -273,6 +293,7 @@ skincare-ai-project/
 ## 🚧 Development Status
 
 ### ✅ Completed
+
 - Complete backend API structure
 - User authentication system
 - Image upload and storage
@@ -282,10 +303,12 @@ skincare-ai-project/
 - Responsive UI design
 
 ### 🔄 In Progress
+
 - AI model integration
 - Advanced analytics and charts
 
 ### 📋 Planned
+
 - Real-time notifications
 - Mobile app development
 - Advanced skin condition detection
@@ -300,6 +323,18 @@ skincare-ai-project/
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+### Code Formatting and Linting
+
+This project uses ESLint and Prettier to maintain code quality and consistency. A GitHub Action automatically runs on all pull requests and commits to the main branch to ensure code quality.
+
+- To format code locally: `npm run format`
+- To lint code locally: `npm run lint`
+- To automatically fix linting issues: `npm run lint:fix`
+
+The GitHub Action will automatically fix formatting and linting issues and commit the changes if needed.
+
+For detailed coding standards and guidelines, see [CODING_STANDARDS.md](CODING_STANDARDS.md).
+
 ## 📝 License
 
 This project is licensed under the ISC License.
@@ -307,6 +342,7 @@ This project is licensed under the ISC License.
 ## 🆘 Support
 
 For support and questions:
+
 - Create an issue in the repository
 - Contact the development team
 - Check the documentation
@@ -323,4 +359,3 @@ For support and questions:
 ---
 
 **Built with ❤️ for better skin health**
-

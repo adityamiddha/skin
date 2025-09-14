@@ -14,7 +14,10 @@
     "build-client": "cd client && npm install && npm run build",
     "build": "npm install && npm run build-client",
     "build-and-start": "npm run build-client && npm start",
-    "production": "NODE_ENV=production npm run build-and-start"
+    "production": "NODE_ENV=production npm run build-and-start",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\""
   },
   "keywords": [],
   "author": "",
@@ -35,6 +38,13 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "eslint": "^8.45.0",
+    "prettier": "^3.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
   }
 }

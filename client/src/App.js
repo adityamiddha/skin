@@ -20,12 +20,10 @@ const LandingPage = () => {
         <div className="mx-auto h-20 w-20 bg-gradient-to-r from-primary-500 to-skin-500 rounded-full flex items-center justify-center mb-6">
           <span className="text-3xl text-white font-bold">S</span>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Welcome to SkinCare AI
-        </h1>
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to SkinCare AI</h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Advanced AI-powered skin analysis and tracking platform. 
-          Get personalized insights about your skin health and track your progress over time.
+          Advanced AI-powered skin analysis and tracking platform. Get personalized insights about
+          your skin health and track your progress over time.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
@@ -56,21 +54,21 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/signup" element={<SignupForm />} />
-            
+
             {/* Protected Routes */}
-            <Route 
-              path="/dashboard" 
+            <Route
+              path="/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
                 </ProtectedRoute>
-              } 
+              }
             />
-            
+
             {/* Redirect all other routes to dashboard if authenticated, otherwise to landing */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-          
+
           {/* Toast Notifications */}
           <ToastContainer
             position="top-right"
@@ -91,4 +89,3 @@ function App() {
 }
 
 export default App;
-

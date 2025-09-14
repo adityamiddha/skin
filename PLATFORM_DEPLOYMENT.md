@@ -16,29 +16,52 @@ Render is a cloud platform that makes it easy to deploy applications. Here's how
 
 1. Name: `skincare-ai` (or your preferred name)
 2. Environment: `Node`
-3. Build Command: `npm run build`
+3. Build Command: `./render-build.sh`
 4. Start Command: `npm start`
 5. Region: Choose the closest to your users
 6. Branch: `main` (or your deployment branch)
 7. Plan: Select an appropriate plan (Free tier works for testing)
 
-### Step 3: Environment Variables
+### Step 3: Configure Environment Variables
 
-Add all variables from your `.env.production` file as environment variables in the Render dashboard:
+Make sure to set the following environment variables in Render:
 
-- `PORT`: Render assigns its own port, so this will be overridden
-- `NODE_ENV`: `production`
+- `PORT`: 10000 (or any port, Render will assign its own port with $PORT)
+- `NODE_ENV`: production
 - `MONGO_URI`: Your MongoDB connection string
 - `JWT_SECRET`: Your JWT secret key
-- `JWT_EXPIRES_IN`: `7d`
-- `JWT_COOKIE_EXPIRES_IN`: `7`
+- `JWT_EXPIRES_IN`: 7d
+- `JWT_COOKIE_EXPIRES_IN`: 7
 - `CLOUDINARY_CLOUD_NAME`: Your Cloudinary cloud name
 - `CLOUDINARY_API_KEY`: Your Cloudinary API key
 - `CLOUDINARY_API_SECRET`: Your Cloudinary API secret
+- `FRONTEND_URL`: Your application URL (e.g., https://your-app.onrender.com)
+
+You can add these by going to the "Environment" tab in your Render dashboard.
 
 ### Step 4: Deploy
 
 Click "Create Web Service" and Render will automatically deploy your application.
+
+### Troubleshooting Render Deployment
+
+If you encounter issues during deployment on Render, try these solutions:
+
+1. **Path-to-regexp errors**: We've addressed this by downgrading Express to version 4.18.2 in our package.json.render file.
+
+2. **Build fails**: Check the build logs for specific errors. You may need to adjust the render-build.sh script.
+
+3. **Application errors after deployment**: Check the logs in the Render dashboard to identify the issue.
+
+4. **Static file serving issues**: Make sure your server.js is correctly set up to serve static files from the client/build directory.
+
+5. **Environment variable issues**: Double-check that all required environment variables are set correctly in the Render dashboard.
+
+6. **Port binding errors**: Render assigns its own port via the PORT environment variable, so make sure your application listens on process.env.PORT.
+
+7. **Health check failures**: The application includes a health check endpoint at `/api/health` that can be used to verify the application is running correctly. You can set this as a health check URL in Render by going to the "Health" tab.
+
+If issues persist, contact Render support or check their documentation for specific troubleshooting guidance.
 
 ## Deploying to Heroku
 

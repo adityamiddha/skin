@@ -10,12 +10,13 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     // Check MongoDB connection
-    const dbStatus = mongoose.connection.readyState === 1 
-      ? 'connected' 
-      : mongoose.connection.readyState === 2 
-        ? 'connecting' 
-        : 'disconnected';
-    
+    const dbStatus =
+      mongoose.connection.readyState === 1
+        ? 'connected'
+        : mongoose.connection.readyState === 2
+          ? 'connecting'
+          : 'disconnected';
+
     // Check environment variables
     const envCheck = {
       nodeEnv: process.env.NODE_ENV || 'not set',
@@ -26,20 +27,20 @@ router.get('/', async (req, res) => {
       cloudinaryApiKey: process.env.CLOUDINARY_API_KEY ? 'set' : 'not set',
       cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET ? 'set' : 'not set',
     };
-    
+
     // Check disk space
     let diskSpace = 'unknown';
     try {
       const { execSync } = require('child_process');
-      diskSpace = execSync('df -h / | tail -1 | awk \'{print $5}\'', { encoding: 'utf8' }).trim();
+      diskSpace = execSync("df -h / | tail -1 | awk '{print $5}'", { encoding: 'utf8' }).trim();
     } catch (err) {
       diskSpace = 'error checking';
     }
-    
+
     // Check memory usage
     const memoryUsage = process.memoryUsage();
-    const formatMemory = (bytes) => (bytes / 1024 / 1024).toFixed(2) + ' MB';
-    
+    const formatMemory = bytes => (bytes / 1024 / 1024).toFixed(2) + ' MB';
+
     const healthStatus = {
       status: 'online',
       timestamp: new Date().toISOString(),
@@ -51,23 +52,23 @@ router.get('/', async (req, res) => {
           rss: formatMemory(memoryUsage.rss),
           heapTotal: formatMemory(memoryUsage.heapTotal),
           heapUsed: formatMemory(memoryUsage.heapUsed),
-          external: formatMemory(memoryUsage.external)
+          external: formatMemory(memoryUsage.external),
         },
         diskUsage: diskSpace,
       },
       database: {
         status: dbStatus,
-        name: mongoose.connection.name || 'not connected'
+        name: mongoose.connection.name || 'not connected',
       },
-      environment: envCheck
+      environment: envCheck,
     };
-    
+
     res.json(healthStatus);
   } catch (error) {
     res.status(500).json({
       status: 'error',
       error: error.message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });

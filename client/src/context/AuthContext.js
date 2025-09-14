@@ -38,18 +38,18 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.login({ email, password });
       const { token: newToken, data } = response.data;
-      
+
       localStorage.setItem('token', newToken);
       localStorage.setItem('user', JSON.stringify(data.user));
-      
+
       setToken(newToken);
       setUser(data.user);
-      
+
       return { success: true };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Login failed' 
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Login failed',
       };
     }
   };
@@ -58,18 +58,18 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authAPI.signup({ name, email, password });
       const { token: newToken, data } = response.data;
-      
+
       localStorage.setItem('token', newToken);
       localStorage.setItem('user', JSON.stringify(data.user));
-      
+
       setToken(newToken);
       setUser(data.user);
-      
+
       return { success: true };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Signup failed' 
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Signup failed',
       };
     }
   };
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const updateUser = (updatedUser) => {
+  const updateUser = updatedUser => {
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
   };
@@ -97,10 +97,5 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!token,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-

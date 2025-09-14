@@ -57,7 +57,7 @@ CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 `;
-  
+
   fs.writeFileSync(envPath, envContent);
   console.log('✅ .env file created');
   console.log('⚠️  Please update the .env file with your actual credentials');
@@ -87,7 +87,7 @@ CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 `;
-  
+
   fs.writeFileSync(envProdPath, envProdContent);
   console.log('✅ .env.production.example file created');
 }

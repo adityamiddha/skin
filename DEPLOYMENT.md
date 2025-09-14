@@ -5,18 +5,22 @@ This guide provides instructions for both local development and production deplo
 ## 📋 Local Development Setup
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - MongoDB
 - Cloudinary account (for image upload functionality)
 
 ### Step 1: Clone the Repository
+
 ```bash
 git clone https://github.com/adityamiddha/skin.git
 cd skin
 ```
 
 ### Step 2: Setup Environment Variables
+
 Create a `.env` file in the root directory with the following variables:
+
 ```
 NODE_ENV=development
 PORT=4000
@@ -30,11 +34,13 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
 Alternatively, run the setup script:
+
 ```bash
 npm run setup
 ```
 
 ### Step 3: Install Dependencies
+
 ```bash
 # Install server dependencies
 npm install
@@ -46,23 +52,29 @@ cd client && npm install
 ### Step 4: Run the Application
 
 #### Development Mode
+
 To run both the frontend and backend in development mode:
+
 ```bash
 npm run dev:all
 ```
 
 This will start:
+
 - Backend server on port 4000
 - Frontend dev server on port 3000
 - A proxy server on port 8080 that routes API requests to the backend
 
 #### Individual Components
+
 To run the backend only:
+
 ```bash
 npm run dev
 ```
 
 To run the frontend only:
+
 ```bash
 npm run dev:frontend
 ```
@@ -70,6 +82,7 @@ npm run dev:frontend
 ## 🚀 Production Deployment
 
 ### Prerequisites
+
 - Node.js v16+ installed on the server
 - MongoDB Atlas account or other MongoDB hosting service
 - Cloudinary account for image storage
@@ -80,12 +93,14 @@ npm run dev:frontend
 #### Step 1: Prepare Your Environment
 
 1. Clone the repository to your server:
+
    ```bash
    git clone https://github.com/adityamiddha/skin.git
    cd skin
    ```
 
 2. Create a production `.env` file:
+
    ```bash
    cp .env.production.example .env
    ```
@@ -101,16 +116,19 @@ npm run dev:frontend
 #### Step 2: Build and Deploy
 
 1. Install dependencies and build the application:
+
    ```bash
    npm run build
    ```
 
 2. Start the application:
+
    ```bash
    npm run production
    ```
 
    Alternatively, you can use a process manager like PM2:
+
    ```bash
    npm install -g pm2
    pm2 start server/server.js --name "skin-care-ai"
@@ -121,12 +139,14 @@ npm run dev:frontend
 For production environments, it's recommended to use a reverse proxy like Nginx:
 
 1. Install Nginx:
+
    ```bash
    sudo apt update
    sudo apt install nginx
    ```
 
 2. Create an Nginx configuration file:
+
    ```nginx
    server {
        listen 80;
@@ -159,9 +179,12 @@ For production environments, it's recommended to use a reverse proxy like Nginx:
 1. Create a new Web Service on Render
 2. Connect your GitHub repository
 3. Configure the service:
-   - Build Command: `npm run build`
+   - Build Command: `./render-build.sh`
    - Start Command: `npm start`
    - Environment Variables: Add all variables from your `.env.production.example` file
+   - Health Check URL: `/api/health`
+
+For detailed, platform-specific instructions, see [PLATFORM_DEPLOYMENT.md](PLATFORM_DEPLOYMENT.md).
 
 #### Heroku Deployment
 

@@ -1,8 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { FiCalendar, FiTrendingUp, FiTrendingDown, FiMinus, FiImage, FiBarChart2, FiClock } from 'react-icons/fi';
+import {
+  FiCalendar,
+  FiTrendingUp,
+  FiTrendingDown,
+  FiMinus,
+  FiImage,
+  FiBarChart2,
+  FiClock,
+} from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { scanResultsAPI } from '../../services/api';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from 'chart.js';
 import { Bar, Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
@@ -28,7 +45,7 @@ const ScanHistory = () => {
     }
   };
 
-  const handleScanSelection = (scanId) => {
+  const handleScanSelection = scanId => {
     setSelectedScans(prev => {
       if (prev.includes(scanId)) {
         return prev.filter(id => id !== scanId);
@@ -50,7 +67,7 @@ const ScanHistory = () => {
     try {
       const response = await scanResultsAPI.compareScanResults({
         scanId1: selectedScans[0],
-        scanId2: selectedScans[1]
+        scanId2: selectedScans[1],
       });
       setComparison(response.data.comparison);
       toast.success('Comparison completed!');
@@ -59,25 +76,25 @@ const ScanHistory = () => {
     }
   };
 
-  const getScoreColor = (score) => {
+  const getScoreColor = score => {
     if (score >= 80) return 'text-success-600 bg-success-100';
     if (score >= 60) return 'text-warning-600 bg-warning-100';
     return 'text-danger-600 bg-danger-100';
   };
 
-  const getTrendIcon = (difference) => {
+  const getTrendIcon = difference => {
     if (difference > 0) return <FiTrendingUp className="h-4 w-4 text-success-500" />;
     if (difference < 0) return <FiTrendingDown className="h-4 w-4 text-danger-500" />;
     return <FiMinus className="h-4 w-4 text-gray-500" />;
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -108,7 +125,7 @@ const ScanHistory = () => {
             <h2 className="text-2xl font-bold text-gray-900">Scan History</h2>
             <p className="text-gray-600 mt-1">Track your skin health progress over time</p>
           </div>
-          
+
           {selectedScans.length === 2 && (
             <button
               onClick={compareScans}
@@ -144,7 +161,9 @@ const ScanHistory = () => {
                     <span className="text-gray-500">Change:</span>
                     <div className="flex items-center space-x-1">
                       {getTrendIcon(data.difference)}
-                      <span className={`font-medium ${data.difference > 0 ? 'text-success-600' : data.difference < 0 ? 'text-danger-600' : 'text-gray-600'}`}>
+                      <span
+                        className={`font-medium ${data.difference > 0 ? 'text-success-600' : data.difference < 0 ? 'text-danger-600' : 'text-gray-600'}`}
+                      >
                         {Math.abs(data.difference)}
                       </span>
                     </div>
@@ -167,7 +186,7 @@ const ScanHistory = () => {
         <div className="px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-900">Recent Scans</h3>
         </div>
-        
+
         <div className="divide-y divide-gray-200">
           {scanResults.map((result, index) => (
             <div key={result._id} className="p-6">
@@ -179,7 +198,7 @@ const ScanHistory = () => {
                   onChange={() => handleScanSelection(result._id)}
                   className="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
-                
+
                 {/* Image */}
                 <div className="flex-shrink-0">
                   <img
@@ -188,28 +207,26 @@ const ScanHistory = () => {
                     className="h-16 w-16 object-cover rounded-lg border border-gray-200"
                   />
                 </div>
-                
+
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
-                                   <div className="flex items-center space-x-2">
-                 <FiClock className="h-4 w-4 text-gray-400" />
-                 <span className="text-sm text-gray-500">
-                   {formatDate(result.createdAt)}
-                 </span>
-               </div>
+                    <div className="flex items-center space-x-2">
+                      <FiClock className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-500">{formatDate(result.createdAt)}</span>
+                    </div>
                   </div>
-                  
+
                   {/* Scores Grid */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {Object.entries(result.aiScores || {}).map(([condition, score]) => (
                       <div key={condition} className="text-center">
-                        <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getScoreColor(score)}`}>
+                        <div
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getScoreColor(score)}`}
+                        >
                           {condition.replace(/([A-Z])/g, ' $1').trim()}
                         </div>
-                        <div className="mt-1 text-lg font-semibold text-gray-900">
-                          {score}
-                        </div>
+                        <div className="mt-1 text-lg font-semibold text-gray-900">{score}</div>
                       </div>
                     ))}
                   </div>
@@ -224,10 +241,9 @@ const ScanHistory = () => {
       {selectedScans.length > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-700">
-            {selectedScans.length === 1 
-              ? 'Select one more scan to compare' 
-              : 'Ready to compare! Click "Compare Selected" above.'
-            }
+            {selectedScans.length === 1
+              ? 'Select one more scan to compare'
+              : 'Ready to compare! Click "Compare Selected" above.'}
           </p>
         </div>
       )}

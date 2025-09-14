@@ -6,7 +6,6 @@ const { protect } = require('../middlewares/authmiddleware');
 const { getMe } = require('../controllers/authController');
 const { updateMe } = require('../controllers/authController');
 
-
 // POST /api/auth/signup
 router.post('/signup', authController.signup);
 
@@ -21,6 +20,5 @@ router.patch('/updateMe', protect, updateMe);
 
 // GET /api/auth/getMe
 router.get('/getMe', protect, getMe);
-
 
 module.exports = router;

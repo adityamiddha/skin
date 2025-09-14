@@ -7,12 +7,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   let token;
 
   // 1. Try to get token from Authorization header
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
-  } 
+  }
   // 2. Otherwise, try to get token from cookies
   else if (req.cookies && req.cookies.jwt) {
     token = req.cookies.jwt;
@@ -29,9 +26,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // 5. Get user from decoded token
   const user = await User.findById(decoded.id);
   if (!user) {
-    return next(
-      new AppError('The user belonging to this token no longer exists.', 401)
-    );
+    return next(new AppError('The user belonging to this token no longer exists.', 401));
   }
 
   // 6. Attach user to request
@@ -42,9 +37,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError('You do not have permission to perform this action', 403)
-      );
+      return next(new AppError('You do not have permission to perform this action', 403));
     }
     next();
   };
