@@ -1,1 +1,0 @@
-# Skincare-AI
