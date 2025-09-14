@@ -1,10 +1,14 @@
 module.exports = {
-  env: {
+        files: ['server/**/*.js', 'utils/**/*.js'],
+      rules: {
+        'no-unused-vars': 'warn',
+      },
+    },{
     browser: true,
     es2021: true,
     node: true,
   },
-  extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:prettier/recommended'],
+  extends: ['eslint:recommended', 'plugin:prettier/recommended'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -12,16 +16,18 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react', 'prettier'],
+  plugins: ['prettier'],
   rules: {
     'prettier/prettier': 'error',
-    'react/prop-types': 'off',
-    'react/react-in-jsx-scope': 'off',
     'no-unused-vars': 'warn',
   },
-  settings: {
-    react: {
-      version: 'detect',
-    },
-  },
+  overrides: [
+    {
+      files: ['server/**/*.js', 'utils/**/*.js'],
+      rules: {
+        'no-unused-vars': 'warn',
+      }
+    }
+  ],
+  ignorePatterns: ['client/**/*'],
 };

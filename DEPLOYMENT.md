@@ -186,6 +186,8 @@ For production environments, it's recommended to use a reverse proxy like Nginx:
 
 For detailed, platform-specific instructions, see [PLATFORM_DEPLOYMENT.md](PLATFORM_DEPLOYMENT.md).
 
+If you encounter any issues during deployment, refer to the [TROUBLESHOOTING.md](TROUBLESHOOTING.md) guide for solutions to common problems.
+
 #### Heroku Deployment
 
 1. Create a new app on Heroku

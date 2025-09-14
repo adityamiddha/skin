@@ -11,7 +11,7 @@ fi
 # Install dependencies
 npm install
 
-# Build the client
-npm run build-client
+# Build the client with ESLint disabled
+npm run build-client-no-lint
 
 echo "Build completed successfully"

@@ -155,6 +155,7 @@ For more detailed deployment instructions and troubleshooting, see:
 
 - [DEPLOYMENT.md](DEPLOYMENT.md) - General deployment guide
 - [PLATFORM_DEPLOYMENT.md](PLATFORM_DEPLOYMENT.md) - Platform-specific deployment instructions
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Solutions for common deployment issues
 
 ### Manual Deployment
 
@@ -355,6 +356,30 @@ For support and questions:
 - **Progress Analytics**: Advanced charts and insights
 - **Mobile App**: Native iOS and Android applications
 - **API Integration**: Third-party skincare app connections
+
+## 📜 Available Scripts
+
+### Development Scripts
+- `npm run dev` - Run backend server in development mode
+- `npm run dev:frontend` - Run frontend in development mode
+- `npm run dev:proxy` - Run development proxy server
+- `npm run dev:all` - Run backend, frontend, and proxy concurrently
+- `npm run setup` - Run setup script to configure environment
+
+### Build Scripts
+- `npm run build` - Build the entire application
+- `npm run build-no-lint` - Build without ESLint (use if you have ESLint conflicts)
+- `npm run build-client` - Build only the frontend
+- `npm run build-client-no-lint` - Build frontend without ESLint
+
+### Production Scripts
+- `npm run production` - Build and start in production mode
+- `npm run production-no-lint` - Build without ESLint and start in production mode
+
+### Code Quality Scripts
+- `npm run lint` - Check code for linting issues
+- `npm run lint:fix` - Automatically fix linting issues
+- `npm run format` - Format code with Prettier
 
 ---
 

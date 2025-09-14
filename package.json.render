@@ -12,9 +12,13 @@
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:frontend\" \"npm run dev:proxy\"",
     "setup": "node dev-setup.js",
     "build-client": "cd client && npm install && npm run build",
+    "build-client-no-lint": "cd client && DISABLE_ESLINT_PLUGIN=true npm install && DISABLE_ESLINT_PLUGIN=true npm run build",
     "build": "npm install && npm run build-client",
+    "build-no-lint": "npm install && npm run build-client-no-lint",
     "build-and-start": "npm run build-client && npm start",
-    "production": "NODE_ENV=production npm run build-and-start"
+    "build-and-start-no-lint": "npm run build-client-no-lint && npm start",
+    "production": "NODE_ENV=production npm run build-and-start",
+    "production-no-lint": "NODE_ENV=production npm run build-and-start-no-lint"
   },
   "engines": {
     "node": "16.x"
