@@ -1,3 +1,8 @@
+/**
+ * Main Express Server
+ * Simplified to avoid path-to-regexp issues
+ */
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -20,11 +25,10 @@ const PORT = process.env.PORT || 5000;
 // Enable trust proxy for secure cookies behind reverse proxies
 app.set('trust proxy', 1);
 
-// Simple CORS setup - only needed for development API testing without the proxy
-// In production or when using the proxy server, this is not strictly necessary
+// Simple CORS setup
 app.use(cors({
   credentials: true,
-  origin: true // This allows the server to accept requests from any origin
+  origin: true // Allow all origins
 }));
 
 // Middleware
@@ -44,28 +48,29 @@ app.use('/api/scans', scanResultsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/health', healthRoutes);
 
-// Serve static files in production
+// Production static file serving
 if (process.env.NODE_ENV === 'production') {
   const buildPath = path.join(__dirname, '../client/build');
   console.log('📂 Serving static files from:', buildPath);
+  
+  // Serve static files
   app.use(express.static(buildPath));
   
-  // Serve index.html for all non-API routes in production
-  app.get('/*', (req, res, next) => {
-    // Skip API routes
-    if (req.path.startsWith('/api/')) {
+  // Handle react routing - send all non-api requests to index.html
+  app.use(function(req, res, next) {
+    if (req.url.startsWith('/api/')) {
       return next();
     }
-    // Serve the index.html for client-side routing
     res.sendFile(path.join(buildPath, 'index.html'));
   });
 }
 
-// Error handling middleware
-app.use((req, res, next) => {
+// 404 handler - must come after all routes and static files
+app.use(function(req, res, next) {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
+// Global error handler
 app.use(globalErrorHandler);
 
 // Start the server
