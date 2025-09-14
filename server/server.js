@@ -51,10 +51,13 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(buildPath));
   
   // Serve index.html for all non-API routes in production
-  app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api/')) {
-      res.sendFile(path.join(buildPath, 'index.html'));
+  app.get('/*', (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+      return next();
     }
+    // Serve the index.html for client-side routing
+    res.sendFile(path.join(buildPath, 'index.html'));
   });
 }
 
