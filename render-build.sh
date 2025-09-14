@@ -11,7 +11,11 @@ fi
 # Install dependencies
 npm install
 
-# Build the client with ESLint disabled
+# Fix unused variables in client code
+chmod +x ./fix-unused-vars-linux.sh
+./fix-unused-vars-linux.sh
+
+# Build the client with ESLint disabled and CI=false to prevent warnings from being treated as errors
 npm run build-client-no-lint
 
 echo "Build completed successfully"

@@ -1,0 +1,47 @@
+name: Fix Unused Variables
+
+on:
+  # Run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Run on pushes to main branch, but only for specific patterns
+  push:
+    branches: [ main ]
+    paths:
+      - 'client/src/components/dashboard/Dashboard.js'
+      - 'client/src/components/dashboard/ScanHistory.js'
+
+jobs:
+  fix-unused-vars:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          # Full git history is needed
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Run fix-unused-vars script
+        run: |
+          chmod +x ./fix-unused-vars-linux.sh
+          ./fix-unused-vars-linux.sh
+          
+      - name: Check for changes
+        id: git-check
+        run: |
+          git status --porcelain
+          echo "modified=$(if git status --porcelain | grep .; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
+          
+      - name: Commit changes
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git commit -m "fix: remove unused variables from dashboard components"
+          git push

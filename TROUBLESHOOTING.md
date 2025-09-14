@@ -16,6 +16,20 @@ Failed to compile.
 
 This happens because the root-level ESLint configuration conflicts with the Create React App's built-in ESLint configuration.
 
+### Problem: ESLint Warnings Treated as Errors in CI
+
+Error message example:
+```
+Treating warnings as errors because process.env.CI = true.
+Most CI servers set it automatically.
+Failed to compile.
+[eslint] 
+src/components/dashboard/Dashboard.js
+  Line 4:20:   'FiCamera' is defined but never used           no-unused-vars
+```
+
+This happens because CI environments treat warnings as errors by default.
+
 ### Solutions:
 
 1. **Use the no-lint build scripts**:
@@ -34,6 +48,18 @@ This happens because the root-level ESLint configuration conflicts with the Crea
    ```bash
    # Set this environment variable before building
    DISABLE_ESLINT_PLUGIN=true npm run build
+   ```
+
+4. **Prevent warnings from being treated as errors**:
+   ```bash
+   # Set CI=false to prevent warnings from being treated as errors
+   CI=false npm run build
+   ```
+
+5. **Fix the unused variables issues**:
+   ```bash
+   # Run the provided script to fix unused variables
+   ./fix-unused-vars.sh
    ```
 
 ## Client Build Issues

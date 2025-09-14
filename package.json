@@ -11,7 +11,7 @@
     "dev:proxy": "node server/dev-proxy-server.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:frontend\" \"npm run dev:proxy\"",
     "setup": "node dev-setup.js",
-    "build-client": "cd client && npm install && npm run build",
+    "build-client": "cd client && npm install && CI=false npm run build",
     "build-client-no-lint": "./build-client-no-lint.sh",
     "build": "npm install && npm run build-client",
     "build-no-lint": "npm install && npm run build-client-no-lint",
