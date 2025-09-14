@@ -4,7 +4,7 @@ This document provides solutions for common deployment issues.
 
 ## ESLint Conflicts During Build
 
-If you encounter ESLint conflicts during the build process, especially on platforms like Render, try the following solutions:
+If you encounter ESLint conflicts during the build process, especially on platforms like Render or Vercel, try the following solutions:
 
 ### Problem: ESLint Plugin Conflicts
 
@@ -108,6 +108,56 @@ If your application can't connect to MongoDB:
    ```bash
    mongosh "your-connection-string"
    ```
+
+## Vercel Deployment Issues
+
+### Problem: No Output Directory Found
+
+Error message example:
+```
+Error: No Output Directory named "public" found after the Build completed. Configure the Output Directory in your Project Settings. Alternatively, configure vercel.json#outputDirectory.
+```
+
+This happens because Create React App builds to a "build" directory, but Vercel is looking for a different directory.
+
+### Solutions:
+
+1. **Use vercel.json configuration**:
+   Create or update your vercel.json file in the root of your project:
+   ```json
+   {
+     "version": 2,
+     "outputDirectory": "client/build",
+     "buildCommand": "./vercel-build.sh"
+   }
+   ```
+
+2. **Configure output directory in the Vercel dashboard**:
+   - Go to your project settings
+   - Navigate to the "Build & Development Settings" section
+   - Set "Output Directory" to "client/build"
+
+3. **Use a custom build script**:
+   Create a vercel-build.sh script that builds your client application and places the output in the correct directory.
+
+### Problem: API Routes Not Working
+
+If your API routes are not working on Vercel, it could be due to incorrect route configuration.
+
+### Solutions:
+
+1. **Check vercel.json routes configuration**:
+   ```json
+   {
+     "routes": [
+       { "src": "/api/(.*)", "dest": "server/server.js" },
+       { "src": "/(.*)", "dest": "client/build/$1" }
+     ]
+   }
+   ```
+
+2. **Ensure server.js is handling routes correctly**:
+   Make sure your server.js file is properly configured to handle API routes and static file serving.
 
 ## File Upload Issues
 

@@ -151,6 +151,28 @@ This project is configured for easy deployment on [Render](https://render.com). 
 5. **Deploy**
    Click "Create Web Service" and Render will automatically deploy your application.
 
+### Vercel Deployment
+
+This project includes configuration for deployment on [Vercel](https://vercel.com), which is optimized for frontend applications:
+
+1. **Prepare for Deployment**
+   - Ensure `vercel.json` and `vercel-build.sh` are in your repository
+   - The vercel.json file configures your build settings and routes
+
+2. **Deploy on Vercel**
+   - Sign up or log in to [Vercel](https://vercel.com)
+   - Click on "New Project" and import your GitHub repository
+   - Configure project settings:
+     - Framework Preset: Other
+     - Build Command: `./vercel-build.sh`
+     - Output Directory: `client/build`
+
+3. **Configure Environment Variables**
+   - Add the same environment variables as listed for Render
+
+4. **Deploy**
+   - Click "Deploy" to build and deploy your application
+
 For more detailed deployment instructions and troubleshooting, see:
 
 - [DEPLOYMENT.md](DEPLOYMENT.md) - General deployment guide

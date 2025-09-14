@@ -71,6 +71,59 @@ Heroku is another popular platform for deploying Node.js applications:
 
 1. Make sure you have the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed
 2. Login to Heroku:
+
+## Deploying to Vercel
+
+Vercel is a cloud platform that specializes in deploying frontend applications. Here's how to deploy your SkinCare AI application:
+
+### Step 1: Prepare Your Application
+
+1. Make sure you have the necessary configuration files:
+   - `vercel.json` - Vercel configuration file
+   - `vercel-build.sh` - Custom build script for Vercel
+
+2. Ensure both files are in the root of your repository and that `vercel-build.sh` is executable.
+
+### Step 2: Deploy via the Vercel Dashboard
+
+1. Sign up or log in to [Vercel](https://vercel.com)
+2. Click on "New Project"
+3. Import your GitHub repository
+4. Configure the project:
+   - Framework Preset: Other
+   - Build Command: `./vercel-build.sh`
+   - Output Directory: `client/build`
+   - Install Command: (leave default)
+   - Development Command: (leave default)
+
+### Step 3: Configure Environment Variables
+
+Configure the following environment variables in the Vercel dashboard:
+
+- `MONGO_URI`: Your MongoDB connection string
+- `JWT_SECRET`: Your JWT secret key
+- `JWT_EXPIRES_IN`: 7d
+- `JWT_COOKIE_EXPIRES_IN`: 7
+- `CLOUDINARY_CLOUD_NAME`: Your Cloudinary cloud name
+- `CLOUDINARY_API_KEY`: Your Cloudinary API key
+- `CLOUDINARY_API_SECRET`: Your Cloudinary API secret
+- `NODE_ENV`: production
+
+### Step 4: Deploy
+
+Click "Deploy" and Vercel will automatically build and deploy your application.
+
+### Troubleshooting Vercel Deployment
+
+If you encounter issues during deployment on Vercel, try these solutions:
+
+1. **Output directory issues**: If you see an error about not finding the output directory, make sure your `vercel.json` file has the correct `outputDirectory` setting.
+
+2. **Build errors related to ESLint**: The `vercel-build.sh` script disables ESLint during the build process to prevent warnings from being treated as errors.
+
+3. **API routes not working**: Make sure your `vercel.json` routes are configured correctly to route API requests to your server.
+
+4. **Environment variables**: Double-check that all required environment variables are set in the Vercel dashboard.
    ```bash
    heroku login
    ```

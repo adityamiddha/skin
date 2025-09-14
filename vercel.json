@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "buildCommand": "./vercel-build.sh",
+  "outputDirectory": "client/build",
+  "builds": [
+    {
+      "src": "server/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "client/build/$1"
+    }
+  ]
+}
